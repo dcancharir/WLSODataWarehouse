@@ -1,8 +1,11 @@
-using Persistence.DataBaseContext;
 using Serilog;
 using Microsoft.EntityFrameworkCore;
+using DWPersistence.DataBaseContext;
+using MySqlPersistence.DataBaseContext;
 var builder = WebApplication.CreateBuilder(args);
-
+IConfiguration configuration = new ConfigurationBuilder()
+              .AddJsonFile("appsettings.json")
+              .Build();
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -19,7 +22,7 @@ builder.Host.ConfigureLogging(logging => {
         Directory.CreateDirectory(logFolder);
     }
 
-    var logFile = Path.Combine(logFolder, "wlsomigratsdb-.log");
+    var logFile = Path.Combine(logFolder, "wlsomigratesdb-.log");
     logging.AddSerilog();
     Log.Logger = new LoggerConfiguration()
         .MinimumLevel.Information()
@@ -33,8 +36,7 @@ ILogger<Program> logger = builder.Services.BuildServiceProvider().GetRequiredSer
 builder.Services.AddDbContext<MySqlContext>(options => {
     options.UseMySql(
         builder.Configuration.GetConnectionString("MySqlConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("MySqlConnection")
-        )
+        ServerVersion.Parse("8.0.32-mysql")        
     );
 });
 builder.Services.AddDbContext<DataWarehouseContext>(options => {

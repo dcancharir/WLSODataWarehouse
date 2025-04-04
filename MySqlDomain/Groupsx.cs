@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
+namespace MySqlDomain;
+
+[Table("Groupsx")]
+public partial class Groupsx
+{
+    /// <summary>
+    /// Id del Tag
+    /// </summary>
+    [Key]
+    [Column("groupId")]
+    public int GroupId { get; set; }
+
+    [Column("name")]
+    [StringLength(255)]
+    public string? Name { get; set; }
+
+    /// <summary>
+    /// 1 -&gt; Tag, 2 -&gt; Segment
+    /// </summary>
+    [Column("type")]
+    [StringLength(255)]
+    public string Type { get; set; } = null!;
+
+    /// <summary>
+    /// 1: Active, 2: Delete
+    /// </summary>
+    [Column("status")]
+    public sbyte? Status { get; set; }
+}

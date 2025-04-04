@@ -5,11 +5,15 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{E98905BC-7239-4CD4-9B7D-9CA8C7DDDBB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{323A0A4F-673A-4FE4-B806-6397481BA69B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "Persistence\Persistence.csproj", "{2FD85617-D19C-48F0-B09D-F04E0D4D5FAD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wlsomigratesdbdatawarehouseapi", "wlsomigratesdbdatawarehouseapi\wlsomigratesdbdatawarehouseapi.csproj", "{2FC33A32-B91E-4891-9A26-0F1BD1506084}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DWPersistence", "DWPersistence\DWPersistence.csproj", "{BA774F28-2B8C-4FC8-8C01-02B29F86C151}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySqlPersistence", "MySqlPersistence\MySqlPersistence.csproj", "{B1549E15-CAD9-4387-9D41-7D2FD761CEB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DWDomain", "DWDomain\DWDomain.csproj", "{0370AC53-2ECC-417F-97A9-8E72FB599512}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySqlDomain", "MySqlDomain\MySqlDomain.csproj", "{5E1488AD-9329-4322-BBB6-9B032FFC0BD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,18 +25,26 @@ Global
 		{E98905BC-7239-4CD4-9B7D-9CA8C7DDDBB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E98905BC-7239-4CD4-9B7D-9CA8C7DDDBB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E98905BC-7239-4CD4-9B7D-9CA8C7DDDBB6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{323A0A4F-673A-4FE4-B806-6397481BA69B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{323A0A4F-673A-4FE4-B806-6397481BA69B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{323A0A4F-673A-4FE4-B806-6397481BA69B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{323A0A4F-673A-4FE4-B806-6397481BA69B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2FD85617-D19C-48F0-B09D-F04E0D4D5FAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2FD85617-D19C-48F0-B09D-F04E0D4D5FAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2FD85617-D19C-48F0-B09D-F04E0D4D5FAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2FD85617-D19C-48F0-B09D-F04E0D4D5FAD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2FC33A32-B91E-4891-9A26-0F1BD1506084}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2FC33A32-B91E-4891-9A26-0F1BD1506084}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FC33A32-B91E-4891-9A26-0F1BD1506084}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FC33A32-B91E-4891-9A26-0F1BD1506084}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA774F28-2B8C-4FC8-8C01-02B29F86C151}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA774F28-2B8C-4FC8-8C01-02B29F86C151}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA774F28-2B8C-4FC8-8C01-02B29F86C151}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA774F28-2B8C-4FC8-8C01-02B29F86C151}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1549E15-CAD9-4387-9D41-7D2FD761CEB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1549E15-CAD9-4387-9D41-7D2FD761CEB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1549E15-CAD9-4387-9D41-7D2FD761CEB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1549E15-CAD9-4387-9D41-7D2FD761CEB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0370AC53-2ECC-417F-97A9-8E72FB599512}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0370AC53-2ECC-417F-97A9-8E72FB599512}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0370AC53-2ECC-417F-97A9-8E72FB599512}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0370AC53-2ECC-417F-97A9-8E72FB599512}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E1488AD-9329-4322-BBB6-9B032FFC0BD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E1488AD-9329-4322-BBB6-9B032FFC0BD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E1488AD-9329-4322-BBB6-9B032FFC0BD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E1488AD-9329-4322-BBB6-9B032FFC0BD4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
