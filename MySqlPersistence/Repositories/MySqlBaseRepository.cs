@@ -24,15 +24,15 @@ public class MySqlBaseRepository<T> : IMySqlBaseRepository<T> where T : class {
         return result;
     }
 
-    public IQueryable<T> GetQuery(string[] navigationProperties, Expression<Func<T, bool>> where) {
+    public async Task<IEnumerable<T>> GetQuery(string[] navigationProperties, Expression<Func<T, bool>> where) {
         var dbQuery = _context
             .Set<T>().Where(where).AsNoTracking();
-        if(navigationProperties != null) {
+        if(navigationProperties != null && navigationProperties.Length > 0) {
             dbQuery = navigationProperties.Aggregate(dbQuery, (current, property) => current.Include(property));
         }
         if(where != null) {
-            return dbQuery.Where(where).AsQueryable();
+            dbQuery.Where(where);
         }
-        return dbQuery.AsQueryable();
+        return await dbQuery.ToListAsync();
     }
 }

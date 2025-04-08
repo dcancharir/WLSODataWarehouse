@@ -2,12 +2,17 @@ using Serilog;
 using Microsoft.EntityFrameworkCore;
 using DWPersistence.DataBaseContext;
 using MySqlPersistence.DataBaseContext;
+using MySqlPersistence;
+using Application;
+using DWPersistence;
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = new ConfigurationBuilder()
               .AddJsonFile("appsettings.json")
               .Build();
 // Add services to the container.
-
+builder.Services.AddApplication();
+builder.Services.AddMysqlPersistence();
+builder.Services.AddDWPersistence();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
