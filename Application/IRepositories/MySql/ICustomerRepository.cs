@@ -7,4 +7,8 @@ using System.Threading.Tasks;
 
 namespace Application.IRepositories.MySql;
 public interface ICustomerRepository : IMySqlBaseRepository<Customer> {
+    public Task<int> GetTotalRecords();
+    public Task<int> GetTotalRecordsByDate(DateTime fecha);
+    public Task<IEnumerable<Customer>> GetAllPaginated(int page, int pageSize);
+    public Task<IEnumerable<Customer>> GetPaginatedByDate(int page, int pageSize,DateTime fecha);
 }

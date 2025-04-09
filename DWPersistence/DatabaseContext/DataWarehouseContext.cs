@@ -34,9 +34,11 @@ public partial class DataWarehouseContext : DbContext{
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<DWAssociate>(entity => {
             entity.HasKey(e => e.Ruc);
+            entity.Property(e => e.Ruc).ValueGeneratedNever();
         });
         modelBuilder.Entity<DWBrand>(entity => {
             entity.HasKey(e => e.BrandId);
+            entity.Property(e => e.BrandId).ValueGeneratedNever();
         });
         modelBuilder.Entity<DWCustomer>(entity => {
         });
@@ -48,6 +50,7 @@ public partial class DataWarehouseContext : DbContext{
         });
         modelBuilder.Entity<DWGroupsx>(entity => {
             entity.HasKey(e => e.GroupId);
+            entity.Property(e => e.GroupId).ValueGeneratedNever();
         });
         modelBuilder.Entity<DWPaymentMethod>(entity => {
             entity.HasKey(e => new { e.MethodId, e.Type });
@@ -58,6 +61,7 @@ public partial class DataWarehouseContext : DbContext{
         });
         modelBuilder.Entity<DWProcessor>(entity => {
             entity.HasKey(e => e.ProcessorId);
+            entity.Property(e => e.ProcessorId).ValueGeneratedNever();
         });
         modelBuilder.Entity<DWProvider>(entity => {
             entity.HasKey(e => e.ProviderId);
@@ -69,6 +73,7 @@ public partial class DataWarehouseContext : DbContext{
         });
         modelBuilder.Entity<DWStore>(entity => {
             entity.HasKey(e => e.StoreId);
+            entity.Property(e => e.StoreId).ValueGeneratedNever();
         });
         modelBuilder.Entity<DWStoreTx>(entity => {
             entity.HasKey(e => e.TxId);

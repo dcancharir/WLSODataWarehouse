@@ -5,6 +5,8 @@ using MySqlPersistence.DataBaseContext;
 using MySqlPersistence;
 using Application;
 using DWPersistence;
+using Quartz;
+using wlsomigratesdbdatawarehouseapi.Jobs;
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = new ConfigurationBuilder()
               .AddJsonFile("appsettings.json")
@@ -47,7 +49,22 @@ builder.Services.AddDbContext<MySqlContext>(options => {
 builder.Services.AddDbContext<DataWarehouseContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DataWarehouseConnection"), options => options.EnableRetryOnFailure());
 });
-
+builder.Services.AddQuartz(q => {
+    JobKey key = new JobKey("MigracionDiariaJob");
+    q.AddJob<MigracionDiariaJob>(jobConfig => jobConfig.WithIdentity(key));
+    q.AddTrigger(opts => opts
+            .ForJob(key)
+            .WithIdentity("MigracionDiariaJob-trigger")
+            //.WithCronSchedule(CronMigracionDiaria)
+            .WithSimpleSchedule(x => x
+                .WithIntervalInHours(6)
+                .RepeatForever().Build())
+            .StartNow()
+    );
+}).AddQuartzHostedService(options => {
+    // when shutting down we want jobs to complete gracefully
+    options.WaitForJobsToComplete = true;
+});
 /**/
 builder.Services.AddSwaggerGen();
 

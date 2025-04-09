@@ -1,5 +1,6 @@
 ﻿using Application.IRepositories.DW;
 using DWPersistence.DataBaseContext;
+using DWPersistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -53,5 +54,8 @@ public class DWBaseRepository<T> : IDWBaseRepository<T> where T : class {
 
     public async Task SaveChanges() {
         await _context.SaveChangesAsync();
+    }
+    public async Task AddIfNotExist(T entity,Expression<Func<T,bool>> predicate) {
+        await _context.InsertIfNotExists(entity, predicate);
     }
 }

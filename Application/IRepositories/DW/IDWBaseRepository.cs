@@ -9,4 +9,5 @@ public interface IDWBaseRepository<T> where T:class {
     Task<T> Add(T entity);
     Task Delete(T entity);
     Task RemoveRange(List<T> entities);
+    Task AddIfNotExist(T entity, Expression<Func<T, bool>> predicate);
 }
