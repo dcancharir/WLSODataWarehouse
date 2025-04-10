@@ -4,6 +4,7 @@ namespace DWDomain;
 /// <summary>
 /// Informacion de Proveedores
 /// </summary>
+[Table("Provider")]
 public partial class DWProvider {
     /// <summary>
     /// ID autoincremental del provider

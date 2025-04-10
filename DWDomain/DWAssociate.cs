@@ -6,6 +6,7 @@ namespace DWDomain;
 /// <summary>
 /// Asociados
 /// </summary>
+[Table("Associate")]
 public partial class DWAssociate {
     /// <summary>
     /// Ruc

@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace DWDomain;
+[Table("RealGameEvent")]
 public partial class DWRealGameEvent {
     /// <summary>
     /// ID de la transaccion

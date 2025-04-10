@@ -21,5 +21,6 @@ public static class DependencyInjection {
         services.AddScoped<IDWRealGameEventRepository, DWRealGameEventRepository>();
         services.AddScoped<IDWStoreRepository, DWStoreRepository>();
         services.AddScoped<IDWStoreTxRepository, DWStoreTxRepository>();
+        services.AddScoped<IDWCustomersGroupRepository,DWCustomerGroupRepository>();
     }
 }

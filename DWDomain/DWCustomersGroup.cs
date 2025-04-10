@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace DWDomain;
+[Table("CustomersGroup")]
 public partial class DWCustomersGroup {
     [Key]
     [Column("playerId")]

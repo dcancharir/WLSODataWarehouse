@@ -8,6 +8,12 @@ using DWPersistence;
 using Quartz;
 using wlsomigratesdbdatawarehouseapi.Jobs;
 var builder = WebApplication.CreateBuilder(args);
+
+var intervaloHorasMigracion = builder.Configuration.GetValue<int>("Variables:IntervalorHorasMigracion");
+var mySqlVersion = builder.Configuration.GetValue<string>("Variables:MySqlVersion")?? "8.0.32-mysql";
+
+var realizarMigracion = builder.Configuration.GetValue<bool>("Variables:RealizarMigracion");
+
 IConfiguration configuration = new ConfigurationBuilder()
               .AddJsonFile("appsettings.json")
               .Build();
@@ -43,24 +49,26 @@ ILogger<Program> logger = builder.Services.BuildServiceProvider().GetRequiredSer
 builder.Services.AddDbContext<MySqlContext>(options => {
     options.UseMySql(
         builder.Configuration.GetConnectionString("MySqlConnection"),
-        ServerVersion.Parse("8.0.32-mysql")        
+        ServerVersion.Parse(mySqlVersion)        
     );
 });
 builder.Services.AddDbContext<DataWarehouseContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DataWarehouseConnection"), options => options.EnableRetryOnFailure());
 });
 builder.Services.AddQuartz(q => {
-    JobKey key = new JobKey("MigracionDiariaJob");
-    q.AddJob<MigracionDiariaJob>(jobConfig => jobConfig.WithIdentity(key));
-    q.AddTrigger(opts => opts
-            .ForJob(key)
-            .WithIdentity("MigracionDiariaJob-trigger")
-            //.WithCronSchedule(CronMigracionDiaria)
-            .WithSimpleSchedule(x => x
-                .WithIntervalInHours(6)
-                .RepeatForever().Build())
-            .StartNow()
-    );
+    if(realizarMigracion) {
+        JobKey key = new JobKey("MigracionDiariaJob");
+        q.AddJob<MigracionDiariaJob>(jobConfig => jobConfig.WithIdentity(key));
+        q.AddTrigger(opts => opts
+                .ForJob(key)
+                .WithIdentity("MigracionDiariaJob-trigger")
+                //.WithCronSchedule(CronMigracionDiaria)
+                .WithSimpleSchedule(x => x
+                    .WithIntervalInHours(intervaloHorasMigracion)
+                    .RepeatForever().Build())
+                .StartNow()
+        );
+    }
 }).AddQuartzHostedService(options => {
     // when shutting down we want jobs to complete gracefully
     options.WaitForJobsToComplete = true;

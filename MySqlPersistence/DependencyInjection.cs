@@ -25,5 +25,6 @@ public static class DependencyInjection {
         services.AddScoped<IRealGameEventRepository, RealGameEventRepository>();
         services.AddScoped<IStoreRepository, StoreRepository>();
         services.AddScoped<IStoreTxRepository, StoreTxRepository>();
+        services.AddScoped<ICustomersGroupRepository, CustomersGroupRepository>();
     }
 }
