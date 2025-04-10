@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace DWDomain;
 [PrimaryKey("MethodId", "Type")]
-[Table("PaymentMethod")]
 public partial class DWPaymentMethod {
 
     /// <summary>

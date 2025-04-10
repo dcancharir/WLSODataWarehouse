@@ -7,7 +7,6 @@ namespace DWDomain;
 /// Informacion de los Games
 /// </summary>
 [PrimaryKey("GameId", "ProviderId")]
-[Table("Game")]
 public partial class DWGame {
     /// <summary>
     /// ID del servicio a traves del que se enviaran mensajes

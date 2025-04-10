@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DWPersistence.Migrations
 {
     [DbContext(typeof(DataWarehouseContext))]
-    [Migration("20250410154018_MigracionInicial")]
-    partial class MigracionInicial
+    [Migration("20250410200049_PrimeraMigracion")]
+    partial class PrimeraMigracion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,7 +51,7 @@ namespace DWPersistence.Migrations
                     b.HasKey("Ruc")
                         .HasName("PK_Associate");
 
-                    b.ToTable("Associate", null, t =>
+                    b.ToTable("Associates", null, t =>
                         {
                             t.HasComment("Asociados");
                         });
@@ -86,7 +86,7 @@ namespace DWPersistence.Migrations
                     b.HasKey("BrandId")
                         .HasName("PK_Brand");
 
-                    b.ToTable("Brand", (string)null);
+                    b.ToTable("Brands", (string)null);
                 });
 
             modelBuilder.Entity("DWDomain.DWCustomer", b =>
@@ -143,9 +143,11 @@ namespace DWPersistence.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("firstName");
 
-                    b.Property<Guid?>("IdentId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("identId");
+                    b.Property<string>("IdentId")
+                        .HasMaxLength(36)
+                        .HasColumnType("nchar(36)")
+                        .HasColumnName("identId")
+                        .IsFixedLength();
 
                     b.Property<string>("Identification")
                         .HasMaxLength(50)
@@ -191,7 +193,7 @@ namespace DWPersistence.Migrations
                         .HasDefaultValue((short)0)
                         .HasColumnName("verified");
 
-                    b.ToTable("Customer", null, t =>
+                    b.ToTable("Customers", null, t =>
                         {
                             t.HasComment("Informacion de Customer");
                         });
@@ -214,7 +216,7 @@ namespace DWPersistence.Migrations
                     b.HasKey("PlayerId", "GroupId")
                         .HasName("PK_CustomersGroup");
 
-                    b.ToTable("CustomersGroup", (string)null);
+                    b.ToTable("CustomersGroups", (string)null);
                 });
 
             modelBuilder.Entity("DWDomain.DWGame", b =>
@@ -257,7 +259,7 @@ namespace DWPersistence.Migrations
                     b.HasKey("GameId", "ProviderId")
                         .HasName("PK_Game");
 
-                    b.ToTable("Game", null, t =>
+                    b.ToTable("Games", null, t =>
                         {
                             t.HasComment("Informacion de los Games");
                         });
@@ -290,7 +292,7 @@ namespace DWPersistence.Migrations
                     b.HasKey("GroupId")
                         .HasName("PK_Groupsx");
 
-                    b.ToTable("Groupsx", (string)null);
+                    b.ToTable("Groupsxs", (string)null);
                 });
 
             modelBuilder.Entity("DWDomain.DWPaymentMethod", b =>
@@ -327,7 +329,7 @@ namespace DWPersistence.Migrations
                     b.HasKey("MethodId", "Type")
                         .HasName("PK_PaymentMethod");
 
-                    b.ToTable("PaymentMethod", (string)null);
+                    b.ToTable("PaymentMethods", (string)null);
                 });
 
             modelBuilder.Entity("DWDomain.DWPlayer", b =>
@@ -354,7 +356,7 @@ namespace DWPersistence.Migrations
                     b.HasKey("PlayerId")
                         .HasName("PK_Player");
 
-                    b.ToTable("Player", null, t =>
+                    b.ToTable("Players", null, t =>
                         {
                             t.HasComment("Cuentas de Players de dinero real, estas se generan cuando el cliente realiza un registro");
                         });
@@ -385,7 +387,7 @@ namespace DWPersistence.Migrations
                     b.HasKey("ProcessorId")
                         .HasName("PK_Processor");
 
-                    b.ToTable("Processor", null, t =>
+                    b.ToTable("Processors", null, t =>
                         {
                             t.HasComment("Tabla de registros del balance los procesadores de pago");
                         });
@@ -415,7 +417,7 @@ namespace DWPersistence.Migrations
                     b.HasKey("ProviderId")
                         .HasName("PK_Provider");
 
-                    b.ToTable("Provider", null, t =>
+                    b.ToTable("Providers", null, t =>
                         {
                             t.HasComment("Informacion de Proveedores");
                         });
@@ -502,7 +504,7 @@ namespace DWPersistence.Migrations
                     b.HasKey("EventId")
                         .HasName("PK_RealGameEvent");
 
-                    b.ToTable("RealGameEvent", (string)null);
+                    b.ToTable("RealGameEvents", (string)null);
                 });
 
             modelBuilder.Entity("DWDomain.DWStore", b =>
@@ -534,7 +536,7 @@ namespace DWPersistence.Migrations
                     b.HasKey("StoreId")
                         .HasName("PK_Store");
 
-                    b.ToTable("Store", null, t =>
+                    b.ToTable("Stores", null, t =>
                         {
                             t.HasComment("Tiendas");
                         });
@@ -648,7 +650,7 @@ namespace DWPersistence.Migrations
                     b.HasKey("TxId")
                         .HasName("PK_StoreTx");
 
-                    b.ToTable("StoreTx", (string)null);
+                    b.ToTable("StoreTxs", (string)null);
                 });
 #pragma warning restore 612, 618
         }

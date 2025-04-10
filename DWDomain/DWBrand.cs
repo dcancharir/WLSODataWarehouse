@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 namespace DWDomain;
-[Table("Brand")]
 public partial class DWBrand {
     /// <summary>
     /// ID de la marca

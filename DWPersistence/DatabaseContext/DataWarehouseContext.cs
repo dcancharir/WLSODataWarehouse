@@ -35,7 +35,7 @@ public partial class DataWarehouseContext : DbContext{
         {
             entity.HasKey(e => e.Ruc).HasName("PK_Associate");
 
-            entity.ToTable("Associate", tb => tb.HasComment("Asociados"));
+            entity.ToTable("Associates", tb => tb.HasComment("Asociados"));
 
             entity.Property(e => e.Ruc)
                 .IsFixedLength()
@@ -53,7 +53,7 @@ public partial class DataWarehouseContext : DbContext{
         {
             entity.HasKey(e => e.BrandId).HasName("PK_Brand");
 
-            entity.ToTable("Brand");
+            entity.ToTable("Brands");
 
             entity.Property(e => e.BrandId)
                 .IsFixedLength()
@@ -71,13 +71,14 @@ public partial class DataWarehouseContext : DbContext{
 
         modelBuilder.Entity<DWCustomer>(entity =>
         {
-            entity.ToTable("Customer", tb => tb.HasComment("Informacion de Customer"));
+            entity.ToTable("Customers", tb => tb.HasComment("Informacion de Customer"));
 
             entity.Property(e => e.Active).HasDefaultValue(Convert.ToSByte(1));
             entity.Property(e => e.AssociateId).IsFixedLength();
             entity.Property(e => e.Email).IsFixedLength();
             entity.Property(e => e.Excluded).HasDefaultValue(Convert.ToSByte(0));
             entity.Property(e => e.Identification).IsFixedLength();
+            entity.Property(e => e.IdentId).IsFixedLength();
             entity.Property(e => e.Phone).IsFixedLength();
             entity.Property(e => e.StoreId).IsFixedLength();
             entity.Property(e => e.Username).IsFixedLength();
@@ -87,14 +88,14 @@ public partial class DataWarehouseContext : DbContext{
         modelBuilder.Entity<DWCustomersGroup>(entity =>
         {
             entity.HasKey(e => new { e.PlayerId, e.GroupId }).HasName("PK_CustomersGroup");
-            entity.ToTable("CustomersGroup");
+            entity.ToTable("CustomersGroups");
         });
 
         modelBuilder.Entity<DWGame>(entity =>
         {
             entity.HasKey(e => new { e.GameId, e.ProviderId }).HasName("PK_Game");
 
-            entity.ToTable("Game", tb => tb.HasComment("Informacion de los Games"));
+            entity.ToTable("Games", tb => tb.HasComment("Informacion de los Games"));
 
             entity.Property(e => e.GameId).IsFixedLength().HasComment("ID del servicio a traves del que se enviaran mensajes");
             entity.Property(e => e.ProviderId).HasComment("ID del provider");
@@ -107,7 +108,7 @@ public partial class DataWarehouseContext : DbContext{
         {
             entity.HasKey(e => e.GroupId).HasName("PK_Groupsx");
 
-            entity.ToTable("Groupsx");
+            entity.ToTable("Groupsxs");
 
             entity.Property(e => e.GroupId)
                 .ValueGeneratedNever()
@@ -121,7 +122,7 @@ public partial class DataWarehouseContext : DbContext{
         {
             entity.HasKey(e => new { e.MethodId, e.Type }).HasName("PK_PaymentMethod");
 
-            entity.ToTable("PaymentMethod");
+            entity.ToTable("PaymentMethods");
 
             entity.Property(e => e.MethodId).IsFixedLength().HasComment("ID del metodo del pago. Ej: NIUBIZ_CARDS");
             entity.Property(e => e.Type).HasDefaultValue("PAYIN").IsFixedLength().HasComment("Tipo: PAYIN, PAYOUT");
@@ -133,7 +134,7 @@ public partial class DataWarehouseContext : DbContext{
         {
             entity.HasKey(e => e.PlayerId).HasName("PK_Player");
 
-            entity.ToTable("Player", tb => tb.HasComment("Cuentas de Players de dinero real, estas se generan cuando el cliente realiza un registro"));
+            entity.ToTable("Players", tb => tb.HasComment("Cuentas de Players de dinero real, estas se generan cuando el cliente realiza un registro"));
 
             entity.Property(e => e.PlayerId).ValueGeneratedNever().HasComment("ID autoincremental para el player");
             entity.Property(e => e.Coins).HasDefaultValue(Convert.ToUInt64(0)).HasComment("Coins reales");
@@ -144,7 +145,7 @@ public partial class DataWarehouseContext : DbContext{
         {
             entity.HasKey(e => e.ProcessorId).HasName("PK_Processor");
 
-            entity.ToTable("Processor", tb => tb.HasComment("Tabla de registros del balance los procesadores de pago"));
+            entity.ToTable("Processors", tb => tb.HasComment("Tabla de registros del balance los procesadores de pago"));
 
             entity.Property(e => e.ProcessorId).HasComment("Identificador del procesador. Ej: NIUBIZ, CULQUI, IZIPAY, ...");
             entity.Property(e => e.Name).HasComment("Nombre del proveedor");
@@ -155,7 +156,7 @@ public partial class DataWarehouseContext : DbContext{
         {
             entity.HasKey(e => e.ProviderId).HasName("PK_Provider");
 
-            entity.ToTable("Provider", tb => tb.HasComment("Informacion de Proveedores"));
+            entity.ToTable("Providers", tb => tb.HasComment("Informacion de Proveedores"));
 
             entity.Property(e => e.ProviderId).ValueGeneratedNever().HasComment("ID autoincremental del provider");
             entity.Property(e => e.Active).HasDefaultValue(Convert.ToSByte(1)).HasComment("1 -> Activo | 0 -> Inactivo");
@@ -166,7 +167,7 @@ public partial class DataWarehouseContext : DbContext{
         {
             entity.HasKey(e => e.EventId).HasName("PK_RealGameEvent");
 
-            entity.ToTable("RealGameEvent");
+            entity.ToTable("RealGameEvents");
 
             entity.Property(e => e.EventId).ValueGeneratedNever().HasComment("ID de la transaccion");
             entity.Property(e => e.Amount).HasComment("Monto de la apuesta");
@@ -186,7 +187,7 @@ public partial class DataWarehouseContext : DbContext{
         {
             entity.HasKey(e => e.StoreId).HasName("PK_Store");
 
-            entity.ToTable("Store", tb => tb.HasComment("Tiendas"));
+            entity.ToTable("Stores", tb => tb.HasComment("Tiendas"));
 
             entity.Property(e => e.StoreId).IsFixedLength();
             entity.Property(e => e.AssociateId).IsFixedLength();
@@ -197,7 +198,7 @@ public partial class DataWarehouseContext : DbContext{
         {
             entity.HasKey(e => e.TxId).HasName("PK_StoreTx");
 
-            entity.ToTable("StoreTx");
+            entity.ToTable("StoreTxs");
 
             entity.Property(e => e.TxId).ValueGeneratedNever().HasComment("ID de la transaccion");
             entity.Property(e => e.Amount).HasComment("monto");

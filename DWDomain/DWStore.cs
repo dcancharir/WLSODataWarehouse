@@ -6,7 +6,6 @@ namespace DWDomain;
 /// <summary>
 /// Tiendas
 /// </summary>
-[Table("Store")]
 public partial class DWStore {
     [Key]
     [Column("storeId")]

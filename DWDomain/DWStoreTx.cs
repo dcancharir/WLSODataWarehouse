@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace DWDomain;
-[Table("StoreTx")]
 public partial class DWStoreTx {
     /// <summary>
     /// ID de la transaccion

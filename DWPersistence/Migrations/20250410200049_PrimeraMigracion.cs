@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DWPersistence.Migrations
 {
     /// <inheritdoc />
-    public partial class MigracionInicial : Migration
+    public partial class PrimeraMigracion : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Associate",
+                name: "Associates",
                 columns: table => new
                 {
                     ruc = table.Column<string>(type: "nchar(11)", fixedLength: true, maxLength: 11, nullable: false, comment: "Ruc"),
@@ -26,7 +26,7 @@ namespace DWPersistence.Migrations
                 comment: "Asociados");
 
             migrationBuilder.CreateTable(
-                name: "Brand",
+                name: "Brands",
                 columns: table => new
                 {
                     brandId = table.Column<string>(type: "nchar(15)", fixedLength: true, maxLength: 15, nullable: false, comment: "ID de la marca"),
@@ -40,7 +40,7 @@ namespace DWPersistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Customer",
+                name: "Customers",
                 columns: table => new
                 {
                     associateId = table.Column<string>(type: "nchar(30)", fixedLength: true, maxLength: 30, nullable: true),
@@ -60,7 +60,7 @@ namespace DWPersistence.Migrations
                     addressProv = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     addressDist = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     address = table.Column<string>(type: "text", nullable: true),
-                    identId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    identId = table.Column<string>(type: "nchar(36)", fixedLength: true, maxLength: 36, nullable: true),
                     identification = table.Column<string>(type: "nchar(50)", fixedLength: true, maxLength: 50, nullable: true)
                 },
                 constraints: table =>
@@ -69,7 +69,7 @@ namespace DWPersistence.Migrations
                 comment: "Informacion de Customer");
 
             migrationBuilder.CreateTable(
-                name: "CustomersGroup",
+                name: "CustomersGroups",
                 columns: table => new
                 {
                     playerId = table.Column<long>(type: "bigint", nullable: false),
@@ -82,7 +82,7 @@ namespace DWPersistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Game",
+                name: "Games",
                 columns: table => new
                 {
                     gameId = table.Column<string>(type: "nchar(50)", fixedLength: true, maxLength: 50, nullable: false, comment: "ID del servicio a traves del que se enviaran mensajes"),
@@ -98,7 +98,7 @@ namespace DWPersistence.Migrations
                 comment: "Informacion de los Games");
 
             migrationBuilder.CreateTable(
-                name: "Groupsx",
+                name: "Groupsxs",
                 columns: table => new
                 {
                     groupId = table.Column<int>(type: "int", nullable: false, comment: "Id del Tag"),
@@ -112,7 +112,7 @@ namespace DWPersistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaymentMethod",
+                name: "PaymentMethods",
                 columns: table => new
                 {
                     methodId = table.Column<string>(type: "nchar(25)", fixedLength: true, maxLength: 25, nullable: false, comment: "ID del metodo del pago. Ej: NIUBIZ_CARDS"),
@@ -126,7 +126,7 @@ namespace DWPersistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Player",
+                name: "Players",
                 columns: table => new
                 {
                     playerId = table.Column<long>(type: "bigint", nullable: false, comment: "ID autoincremental para el player"),
@@ -140,7 +140,7 @@ namespace DWPersistence.Migrations
                 comment: "Cuentas de Players de dinero real, estas se generan cuando el cliente realiza un registro");
 
             migrationBuilder.CreateTable(
-                name: "Processor",
+                name: "Processors",
                 columns: table => new
                 {
                     processorId = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false, comment: "Identificador del procesador. Ej: NIUBIZ, CULQUI, IZIPAY, ..."),
@@ -154,7 +154,7 @@ namespace DWPersistence.Migrations
                 comment: "Tabla de registros del balance los procesadores de pago");
 
             migrationBuilder.CreateTable(
-                name: "Provider",
+                name: "Providers",
                 columns: table => new
                 {
                     providerId = table.Column<long>(type: "bigint", nullable: false, comment: "ID autoincremental del provider"),
@@ -168,7 +168,7 @@ namespace DWPersistence.Migrations
                 comment: "Informacion de Proveedores");
 
             migrationBuilder.CreateTable(
-                name: "RealGameEvent",
+                name: "RealGameEvents",
                 columns: table => new
                 {
                     eventId = table.Column<decimal>(type: "decimal(20,0)", nullable: false, comment: "ID de la transaccion"),
@@ -190,7 +190,7 @@ namespace DWPersistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Store",
+                name: "Stores",
                 columns: table => new
                 {
                     storeId = table.Column<string>(type: "nchar(50)", fixedLength: true, maxLength: 50, nullable: false),
@@ -205,7 +205,7 @@ namespace DWPersistence.Migrations
                 comment: "Tiendas");
 
             migrationBuilder.CreateTable(
-                name: "StoreTx",
+                name: "StoreTxs",
                 columns: table => new
                 {
                     txId = table.Column<long>(type: "bigint", nullable: false, comment: "ID de la transaccion"),
@@ -235,43 +235,43 @@ namespace DWPersistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Associate");
+                name: "Associates");
 
             migrationBuilder.DropTable(
-                name: "Brand");
+                name: "Brands");
 
             migrationBuilder.DropTable(
-                name: "Customer");
+                name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "CustomersGroup");
+                name: "CustomersGroups");
 
             migrationBuilder.DropTable(
-                name: "Game");
+                name: "Games");
 
             migrationBuilder.DropTable(
-                name: "Groupsx");
+                name: "Groupsxs");
 
             migrationBuilder.DropTable(
-                name: "PaymentMethod");
+                name: "PaymentMethods");
 
             migrationBuilder.DropTable(
-                name: "Player");
+                name: "Players");
 
             migrationBuilder.DropTable(
-                name: "Processor");
+                name: "Processors");
 
             migrationBuilder.DropTable(
-                name: "Provider");
+                name: "Providers");
 
             migrationBuilder.DropTable(
-                name: "RealGameEvent");
+                name: "RealGameEvents");
 
             migrationBuilder.DropTable(
-                name: "Store");
+                name: "Stores");
 
             migrationBuilder.DropTable(
-                name: "StoreTx");
+                name: "StoreTxs");
         }
     }
 }

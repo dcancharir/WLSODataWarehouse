@@ -4,7 +4,6 @@ namespace DWDomain;
 /// <summary>
 /// Tabla de registros del balance los procesadores de pago
 /// </summary>
-[Table("Processor")]
 public partial class DWProcessor {
     /// <summary>
     /// Identificador del procesador. Ej: NIUBIZ, CULQUI, IZIPAY, ...

@@ -15,6 +15,6 @@ public class DWPlayerRepository : DWBaseRepository<DWPlayer>, IDWPlayerRepositor
         _context = context;
     }
     public async Task<DWPlayer?> GetLastRecord() {
-        return await _context.DWPlayers.LastOrDefaultAsync();
+        return await _context.DWPlayers.OrderByDescending(x=>x.PlayerId).FirstOrDefaultAsync();
     }
 }

@@ -7,7 +7,7 @@ namespace DWDomain;
 /// Informacion de Customer
 /// </summary>
 [Keyless]
-[Table("Customer")]
+[Table("Customers")]
 public partial class DWCustomer {
     [Column("associateId")]
     [StringLength(30)]
@@ -71,7 +71,8 @@ public partial class DWCustomer {
     public string? Address { get; set; }
 
     [Column("identId")]
-    public Guid? IdentId { get; set; }
+    [StringLength(36)]
+    public string? IdentId { get; set; }
 
     [Column("identification")]
     [StringLength(50)]

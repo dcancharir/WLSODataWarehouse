@@ -10,7 +10,6 @@ namespace DWDomain;
 /// <summary>
 /// Cuentas de Players de dinero real, estas se geeran cuando el cliente realiza un registro
 /// </summary>
-[Table("Player")]
 public partial class DWPlayer {
     /// <summary>
     /// ID autoincremental para el player
