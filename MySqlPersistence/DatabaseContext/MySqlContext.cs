@@ -66,7 +66,7 @@ public partial class MySqlContext : DbContext {
             entity.Property(e => e.Email).IsFixedLength();
             entity.Property(e => e.Excluded).HasDefaultValueSql("'0'");
             entity.Property(e => e.Identification).IsFixedLength();
-            entity.Property(e => e.IdentId).HasColumnType("CHAR(36)").IsUnicode(false).IsFixedLength();
+            //entity.Property(e => e.IdentId).HasColumnType("CHAR(36)").IsUnicode(false).IsFixedLength();
             entity.Property(e => e.Phone).IsFixedLength();
             entity.Property(e => e.StoreId).IsFixedLength();
             entity.Property(e => e.Username).IsFixedLength();
