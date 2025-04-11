@@ -16,7 +16,7 @@ public class RealGameEventRepository : MySqlBaseRepository<RealGameEvent>, IReal
     }
 
     public async Task<IEnumerable<RealGameEvent>> GetPaginatedByDates(int page, int pageSize, DateTime insDateTime) {
-        return await _context.RealGameEvents.Where(x => x.InsDatetime >= insDateTime).Skip(page).Take(pageSize).ToListAsync();
+        return await _context.RealGameEvents.Where(x => x.InsDatetime >= insDateTime).OrderBy(x=>x.InsDatetime).Skip(page).Take(pageSize).ToListAsync();
     }
 
     public async Task<int> GetTotalRecordsByDate(DateTime insDateTime) {

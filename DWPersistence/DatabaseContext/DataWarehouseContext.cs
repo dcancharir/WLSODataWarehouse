@@ -72,6 +72,8 @@ public partial class DataWarehouseContext : DbContext{
         modelBuilder.Entity<DWCustomer>(entity =>
         {
             entity.ToTable("Customers", tb => tb.HasComment("Informacion de Customer"));
+            entity.HasKey(e => e.PlayerId).HasName("PK_Customers");
+            entity.Property(e => e.PlayerId).ValueGeneratedNever();
 
             entity.Property(e => e.Active).HasDefaultValue(Convert.ToSByte(1));
             entity.Property(e => e.AssociateId).IsFixedLength();

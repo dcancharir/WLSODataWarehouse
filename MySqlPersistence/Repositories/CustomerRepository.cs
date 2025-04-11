@@ -15,9 +15,39 @@ public class CustomerRepository : MySqlBaseRepository<Customer>, ICustomerReposi
         _context = context;
     }
 
-    public async Task<IEnumerable<Customer>> GetAllPaginated(int page, int pageSize) {
-        return await _context.Customers.Skip(page).Take(pageSize).ToListAsync();
+    public async Task<IEnumerable<Customer>> GetAllPaginated(int page, int pageSize, DateTime fecha) {
+        int offset = (page - 1) * pageSize;
+        //string dateStr = fecha.ToString("yyyy-MM-dd HH:mm:ss");
+        FormattableString query = $@"
+    SELECT  
+`associateId`,  
+`storeId`,  
+`playerId`,  
+`username`,  
+`email`,  
+`firstName`,  
+`lastName`,  
+`phone`,  
+`active`,  
+`verified`,  
+`excluded`,  
+`regDatetime`,  
+`birthdate`,  
+`addressDept`,  
+`addressProv`,  
+`addressDist`, 
+`address`,  
+CAST(`identId` as VARCHAR(250)) as identId,  
+`identification` 
+FROM `customers` where regDatetime >= {fecha} order by regDatetime asc LIMIT {pageSize} offset {offset};
+";
+        var result = await _context.Customers.FromSql(query).AsNoTracking().ToListAsync();
+        return result;
     }
+
+    //public async Task<IEnumerable<Customer>> GetAllPaginated(int page, int pageSize) {
+    //    return await _context.Customers.Skip(page).Take(pageSize).ToListAsync();
+    //}
 
     public async Task<IEnumerable<Customer>> GetPaginatedByDate(int page, int pageSize, DateTime fecha) {
         return await _context.Customers.Where(x=>x.RegDatetime >= fecha).Skip(page).Take(pageSize).ToListAsync();

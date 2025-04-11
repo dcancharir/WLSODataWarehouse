@@ -30,9 +30,9 @@ public class MigrarCustomerCommand :IRequest<bool>{
                 }
                 var totalRecords = await _customerRepository.GetTotalRecordsByDate(lastDate);
                 var batchCount = (totalRecords + batchSize - 1)/batchSize;
-                for(int i = 0; i<= batchCount; i++) {
-                    var startIndex = i * batchSize;
-                    var batch = await _customerRepository.GetPaginatedByDate(startIndex, batchSize,lastDate);
+                for(int i = 1; i<= batchCount; i++) {
+                    var startIndex = i ;
+                    var batch = await _customerRepository.GetAllPaginated(startIndex, batchSize,lastDate);
                     var mapped = _mapper.Map<List<DWCustomer>>(batch);
                     foreach(var item in mapped) {
                         Expression<Func<DWCustomer, bool>> predicate = c => c.PlayerId == item.PlayerId;

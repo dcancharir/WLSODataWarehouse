@@ -16,7 +16,7 @@ public class PlayerRepository : MySqlBaseRepository<Player>, IPlayerRepository {
     }
 
     public async Task<IEnumerable<Player>> GetPaginatedById(int page, int pageSize, uint id) {
-        return await _context.Players.Where(x => x.PlayerId >= id).Skip(page).Take(pageSize).ToListAsync();
+        return await _context.Players.Where(x => x.PlayerId >= id).OrderBy(x=>x.PlayerId).Skip(page).Take(pageSize).ToListAsync();
     }
 
     public async Task<int> GetTotalRecordsById(uint id) {

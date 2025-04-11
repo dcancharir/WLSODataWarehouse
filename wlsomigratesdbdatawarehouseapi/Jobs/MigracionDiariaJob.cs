@@ -47,13 +47,14 @@ public class MigracionDiariaJob : IJob{
             await ProcessorMigration(_mediator);
             _logger.LogInformation($"Metodo ProviderMigration iniciado");
             await ProviderMigration(_mediator);
+            _logger.LogInformation($"Metodo RealGameEventMigration iniciado");
+            await RealGameEventMigration(_mediator);
             _logger.LogInformation($"Metodo StoreMigration iniciado");
             await StoreMigration(_mediator);
             _logger.LogInformation($"Metodo StoreTxMigration iniciado");
             await StoreTxMigration(_mediator);
-            _logger.LogInformation($"Metodo RealGameEventMigration iniciado");
-            await RealGameEventMigration(_mediator);
-     
+         
+
             _logger.LogInformation($"Job MigracionDiariaJob terminado");
         }
         await Task.CompletedTask;

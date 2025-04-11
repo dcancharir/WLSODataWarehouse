@@ -22,7 +22,7 @@ public class GetListCustomersQuery :IRequest<IEnumerable<Customer>>{
         public async Task<IEnumerable<Customer>>Handle(GetListCustomersQuery request,CancellationToken cancellationToken) {
             IEnumerable<Customer> result = Enumerable.Empty<Customer>();
             try {
-                result = await _customerRepository.GetAllPaginated(request.page, request.pageSize);
+                result = await _customerRepository.GetAll();
             } catch(Exception ex) {
                 _logger.LogError($"GetListCustomersQueryHandler ERROR - {ex.Message}");
             }

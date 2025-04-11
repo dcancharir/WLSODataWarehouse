@@ -88,6 +88,10 @@ namespace DWPersistence.Migrations
 
             modelBuilder.Entity("DWDomain.DWCustomer", b =>
                 {
+                    b.Property<long>("PlayerId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("playerId");
+
                     b.Property<short?>("Active")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("smallint")
@@ -141,8 +145,8 @@ namespace DWPersistence.Migrations
                         .HasColumnName("firstName");
 
                     b.Property<string>("IdentId")
-                        .HasMaxLength(36)
-                        .HasColumnType("nchar(36)")
+                        .HasMaxLength(250)
+                        .HasColumnType("nchar(250)")
                         .HasColumnName("identId")
                         .IsFixedLength();
 
@@ -162,10 +166,6 @@ namespace DWPersistence.Migrations
                         .HasColumnType("nchar(50)")
                         .HasColumnName("phone")
                         .IsFixedLength();
-
-                    b.Property<long>("PlayerId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("playerId");
 
                     b.Property<DateTime?>("RegDatetime")
                         .HasColumnType("datetime")
@@ -189,6 +189,9 @@ namespace DWPersistence.Migrations
                         .HasColumnType("smallint")
                         .HasDefaultValue((short)0)
                         .HasColumnName("verified");
+
+                    b.HasKey("PlayerId")
+                        .HasName("PK_Customers");
 
                     b.ToTable("Customers", null, t =>
                         {

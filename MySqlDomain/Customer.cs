@@ -84,7 +84,7 @@ public partial class Customer
     public string? Address { get; set; }
 
     [Column("identId")]
-    public Guid? IdentId { get; set; }
+    public string? IdentId { get; set; }
 
     [Column("identification")]
     [StringLength(50)]

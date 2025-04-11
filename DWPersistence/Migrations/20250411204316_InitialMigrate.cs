@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DWPersistence.Migrations
 {
     /// <inheritdoc />
-    public partial class PrimeraMigracion : Migration
+    public partial class InitialMigrate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -43,9 +43,9 @@ namespace DWPersistence.Migrations
                 name: "Customers",
                 columns: table => new
                 {
+                    playerId = table.Column<long>(type: "bigint", nullable: false),
                     associateId = table.Column<string>(type: "nchar(30)", fixedLength: true, maxLength: 30, nullable: true),
                     storeId = table.Column<string>(type: "nchar(30)", fixedLength: true, maxLength: 30, nullable: true),
-                    playerId = table.Column<long>(type: "bigint", nullable: false),
                     username = table.Column<string>(type: "nchar(250)", fixedLength: true, maxLength: 250, nullable: false),
                     email = table.Column<string>(type: "nchar(250)", fixedLength: true, maxLength: 250, nullable: true),
                     firstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
@@ -60,11 +60,12 @@ namespace DWPersistence.Migrations
                     addressProv = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     addressDist = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     address = table.Column<string>(type: "text", nullable: true),
-                    identId = table.Column<string>(type: "nchar(36)", fixedLength: true, maxLength: 36, nullable: true),
+                    identId = table.Column<string>(type: "nchar(250)", fixedLength: true, maxLength: 250, nullable: true),
                     identification = table.Column<string>(type: "nchar(50)", fixedLength: true, maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_Customers", x => x.playerId);
                 },
                 comment: "Informacion de Customer");
 
