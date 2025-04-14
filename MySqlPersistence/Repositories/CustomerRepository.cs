@@ -37,9 +37,9 @@ public class CustomerRepository : MySqlBaseRepository<Customer>, ICustomerReposi
 `addressProv`,  
 `addressDist`, 
 `address`,  
-CAST(`identId` as VARCHAR(250)) as identId,  
+CAST(`identId` as CHAR(250)) as identId,  
 `identification` 
-FROM `customers` where regDatetime >= {fecha} order by regDatetime asc LIMIT {pageSize} offset {offset};
+FROM `Customers` where `regDatetime` >= {fecha} order by `regDatetime` asc LIMIT {pageSize} offset {offset};
 ";
         var result = await _context.Customers.FromSql(query).AsNoTracking().ToListAsync();
         return result;
