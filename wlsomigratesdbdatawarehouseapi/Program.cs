@@ -49,7 +49,11 @@ ILogger<Program> logger = builder.Services.BuildServiceProvider().GetRequiredSer
 builder.Services.AddDbContext<MySqlContext>(options => {
     options.UseMySql(
         builder.Configuration.GetConnectionString("MySqlConnection"),
-        ServerVersion.Parse(mySqlVersion)        
+        ServerVersion.Parse(mySqlVersion),
+        opt => {
+            opt.CommandTimeout(300);
+            opt.EnableRetryOnFailure();
+        }
     );
 });
 builder.Services.AddDbContext<DataWarehouseContext>(options => {
