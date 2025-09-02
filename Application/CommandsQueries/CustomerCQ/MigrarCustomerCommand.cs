@@ -21,23 +21,37 @@ public class MigrarCustomerCommand :IRequest<bool>{
         }
         public async Task<bool> Handle(MigrarCustomerCommand request,CancellationToken cancellationToken) {
             bool response = false;
-            var batchSize = 1000;
-            DateTime lastDate = new DateTime(year:1753,month:1,day:1);
+            var delay = 1000;
+            bool continuarTarea = true;
             try {
-                var lastRecord = await _dwCustomerRepository.GetLastRecordByRegDateTime();
-                if (lastRecord != null) {
-                    lastDate = Convert.ToDateTime(lastRecord.RegDatetime);
-                }
-                var totalRecords = await _customerRepository.GetTotalRecordsByDate(lastDate);
-                var batchCount = (totalRecords + batchSize - 1)/batchSize;
-                for(int i = 1; i<= batchCount; i++) {
-                    var startIndex = i ;
-                    var batch = await _customerRepository.GetAllPaginated(startIndex, batchSize,lastDate);
-                    var mapped = _mapper.Map<List<DWCustomer>>(batch);
-                    foreach(var item in mapped) {
-                        Expression<Func<DWCustomer, bool>> predicate = c => c.PlayerId == item.PlayerId;
-                        await _dwCustomerRepository.AddIfNotExist(item, predicate);
-                        await _dwCustomerRepository.SaveChanges();
+                while(continuarTarea) {
+                    continuarTarea = false;
+                    await Task.Delay(delay);
+                    const int totalItems = 1000;
+                    DateTime lastDate = new DateTime(year: 1753, month: 1, day: 1);
+                    var lastRecord = await _dwCustomerRepository.GetLastRecordByRegDateTime();
+                    var totalRegistros = await _dwCustomerRepository.GetTotalRecords();
+                    if(totalRegistros > 0 && lastRecord == null) {
+                        _logger.LogWarning($"MigrarCustomerCommandHandler - Inconsistencia de datos, lastRecord fue null, pero existen registros en tabla");
+                        return false;
+                    }
+                    if(lastRecord != null) {
+                        lastDate = Convert.ToDateTime(lastRecord.RegDatetime);
+                    }
+                    var registros = await _customerRepository.GetByDate(lastDate, totalItems);
+                    if(registros.Any()) {
+                        var existentes = await _dwCustomerRepository.GetListByFilter(x => registros.Select(y => y.PlayerId).Contains(x.PlayerId));
+                        var listaIds = existentes.Select(x => x.PlayerId);
+                        var registrosMapear = registros.Where(x => !listaIds.Contains(x.PlayerId));
+
+                        var registrosMapeados = _mapper.Map<List<DWCustomer>>(registrosMapear);
+
+
+                        if(registrosMapeados.Any()) {
+                            await _dwCustomerRepository.BulkInsert(registrosMapeados);
+                            await _dwCustomerRepository.BulkSaveChanges();
+                            continuarTarea = true;
+                        }
                     }
                 }
                 response = true;
@@ -47,36 +61,9 @@ public class MigrarCustomerCommand :IRequest<bool>{
             }
             return response;
         }
-        //public async Task<bool> Handle(MigrarCustomerCommand request,CancellationToken cancellationToken) {
-        //    bool response = false;
-        //    var batchSize = 1000;
-        //    try {
-        //        var lastRecord = await _dwCustomerRepository.GetLastRecordByRegDateTime();
-        //        var totalRecords = 0;
-        //        if(lastRecord == null) {
-        //            //migrar todo
-        //            totalRecords = await _customerRepository.GetTotalRecords();
-        //        } else {
-
-        //            totalRecords = await _customerRepository.GetTotalRecordsByDate(Convert.ToDateTime(lastRecord.RegDatetime));
-        //        }
-        //        var batchCount = (totalRecords + batchSize - 1) / batchSize;
-        //        for (int i = 0; i<= batchCount; i++) {
-        //            var startIndex = i*batchSize;
-        //            var batch = lastRecord == null ? await _customerRepository.GetAllPaginated(startIndex,batchSize) : await _customerRepository.GetPaginatedByDate(startIndex,batchSize,Convert.ToDateTime(lastRecord.RegDatetime));
-        //            var mapped = _mapper.Map<IEnumerable<DWCustomer>>(batch);
-        //            foreach(var item in mapped) {
-        //                Expression<Func<DWCustomer,bool>> predicate = c => c.PlayerId == item.PlayerId;
-        //                await _dwCustomerRepository.AddIfNotExist(item,predicate);
-        //                await _dwCustomerRepository.SaveChanges();
-        //            }
-        //        }
-        //        response = true;
-        //    } catch(Exception ex) {
-        //        _logger.LogError($"MigrarCustomerCommandHandler - {ex.Message}");
-        //        response = false;
-        //    }
-        //    return response;
-        //}
+        internal static async Task<DWCustomer?> GetLastRecord(IDWCustomerRepository _customerRepository) {
+            var result = await _customerRepository.GetLastRecordByRegDateTime();
+            return result;
+        }
     }
 }

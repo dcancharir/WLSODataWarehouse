@@ -1,6 +1,7 @@
 ﻿using Application.IRepositories.DW;
 using DWPersistence.DataBaseContext;
 using DWPersistence.Extensions;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -57,5 +58,14 @@ public class DWBaseRepository<T> : IDWBaseRepository<T> where T : class {
     }
     public async Task AddIfNotExist(T entity,Expression<Func<T,bool>> predicate) {
         await _context.InsertIfNotExists(entity, predicate);
+    }
+    public async Task AddRange(List<T> entities) {
+        await _context.Set<T>().AddRangeAsync(entities);
+    }
+    public async Task BulkInsert(List<T> entities) {
+        await _context.BulkInsertAsync<T>(entities);
+    }
+    public async Task BulkSaveChanges() { 
+        await _context.BulkSaveChangesAsync();
     }
 }

@@ -17,4 +17,8 @@ public class DWCustomerRepository : DWBaseRepository<DWCustomer>, IDWCustomerRep
     public async Task<DWCustomer?> GetLastRecordByRegDateTime() {
         return await _context.DWCustomers.OrderByDescending(x=>x.RegDatetime).FirstOrDefaultAsync();
     }
+
+    public async Task<int> GetTotalRecords() {
+        return await _context.DWCustomers.CountAsync();
+    }
 }

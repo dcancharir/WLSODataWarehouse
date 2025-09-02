@@ -45,6 +45,34 @@ FROM `Customers` where `regDatetime` >= {fecha} order by `regDatetime` asc LIMIT
         return result;
     }
 
+    public async Task<IEnumerable<Customer>> GetByDate(DateTime fecha,int limit) {
+        FormattableString query = $@"
+            SELECT  
+        `associateId`,  
+        `storeId`,  
+        `playerId`,  
+        `username`,  
+        `email`,  
+        `firstName`,  
+        `lastName`,  
+        `phone`,  
+        `active`,  
+        `verified`,  
+        `excluded`,  
+        `regDatetime`,  
+        `birthdate`,  
+        `addressDept`,  
+        `addressProv`,  
+        `addressDist`, 
+        `address`,  
+        CAST(`identId` as CHAR(250)) as identId,  
+        `identification` 
+        FROM `Customers` where `regDatetime` >= {fecha} order by `regDatetime` asc LIMIT {limit};
+        ";
+        var result = await _context.Customers.FromSql(query).AsNoTracking().ToListAsync();
+        return result;
+    }
+
     //public async Task<IEnumerable<Customer>> GetAllPaginated(int page, int pageSize) {
     //    return await _context.Customers.Skip(page).Take(pageSize).ToListAsync();
     //}

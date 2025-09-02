@@ -18,7 +18,7 @@ public class MigrarAssociateCommand : IRequest<bool> {
         private readonly IDWAssociateRepository _dwAssociateRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<MigrarAssociateCommandHandler> _logger;
-        public MigrarAssociateCommandHandler(IAssociateRepository repository, IAssociateRepository associateRepository, IDWAssociateRepository dwAssociateRepository, IMapper mapper, ILogger<MigrarAssociateCommandHandler> logger) {
+        public MigrarAssociateCommandHandler(IAssociateRepository associateRepository, IDWAssociateRepository dwAssociateRepository, IMapper mapper, ILogger<MigrarAssociateCommandHandler> logger) {
             _associateRepository = associateRepository;
             _dwAssociateRepository = dwAssociateRepository;
             _mapper = mapper;
@@ -28,27 +28,31 @@ public class MigrarAssociateCommand : IRequest<bool> {
             var response = false;
             try {
                 var registros = await _associateRepository.GetAll();
-                //var registros = new List<DWAssociate>() { 
-                //    new DWAssociate() {
-                //        Ruc = "10473161520",
-                //        Name = "Test",
-                //        Status = 1
-                //    },
-                //     new DWAssociate() {
-                //        Ruc = "10473161522",
-                //        Name = "Test2",
-                //        Status = 1
-                //    },
-                //};
-                //var registroExistentes = await _dwAssociateRepository.GetAll();
-
-                //var registrosInsertar = registros.Where(c2 => !registroExistentes.Any(c1 => c1.Ruc == c2.Ruc)).ToList();
-                var registrosMapeados = _mapper.Map<List<DWAssociate>>(registros);
-                foreach (var registro in registrosMapeados) {
-                    Expression<Func<DWAssociate,bool>> predicate = c => c.Ruc == registro.Ruc;
-                    await _dwAssociateRepository.AddIfNotExist(registro,predicate);
-                    await _dwAssociateRepository.SaveChanges();
+              
+                if(!registros.Any()) {
+                    _logger.LogWarning($"MigrarAssociateCommandHandler - No se encontraron registros a migrar");
+                    return true;
                 }
+
+                var existentes = await _dwAssociateRepository.GetListByFilter(x => registros.Select(y => y.Ruc).Contains(x.Ruc));
+               
+                var listaRucs = existentes.Select(x => x.Ruc);
+               
+                var registrosMapear = registros.Where(x => !listaRucs.Contains(x.Ruc));
+
+                var registrosMapeados = _mapper.Map<List<DWAssociate>>(registrosMapear);
+
+                //var registros = registrosMapeados.RemoveAll(x => existentes.Select(y => y.Ruc).Contains(x.Ruc));
+                if(registrosMapeados.Any() ) {
+                    await _dwAssociateRepository.BulkInsert(registrosMapeados);
+                    await _dwAssociateRepository.BulkSaveChanges();
+                }
+
+                //foreach (var registro in registrosMapeados) {
+                //    Expression<Func<DWAssociate,bool>> predicate = c => c.Ruc == registro.Ruc;
+                //    a10wAssociateRepository.AddIfNotExist(registro,predicate);
+                //    await _dwAssociateRepository.SaveChanges();
+                //}
                 response = true;
 
             } catch(Exception ex) {

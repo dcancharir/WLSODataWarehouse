@@ -10,4 +10,7 @@ public interface IDWBaseRepository<T> where T:class {
     Task Delete(T entity);
     Task RemoveRange(List<T> entities);
     Task AddIfNotExist(T entity, Expression<Func<T, bool>> predicate);
+    Task AddRange(List<T> entities);
+    Task BulkInsert(List<T> entities);
+    Task BulkSaveChanges();
 }
