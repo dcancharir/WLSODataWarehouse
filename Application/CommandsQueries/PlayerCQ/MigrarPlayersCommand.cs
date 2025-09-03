@@ -34,16 +34,27 @@ public class MigrarPlayersCommand : IRequest<bool>{
                     lastId = lastRecord.PlayerId;
                 }
                 var totalRecords = await _playerRepository.GetTotalRecordsById(lastId);
-                var batchCount = (totalRecords + batchSize - 1)/batchSize;
+                var batchCount = (totalRecords + batchSize - 1) / batchSize;
                 for(int i = 0; i <= batchCount; i++) {
-                    var startIndex = i* batchSize;
+                    var startIndex = i * batchSize;
                     var batch = await _playerRepository.GetPaginatedById(startIndex, batchSize, lastId);
                     var mapped = _mapper.Map<List<DWPlayer>>(batch);
-                    foreach(var item in mapped) {
-                        Expression<Func<DWPlayer,bool>> predicate = c => c.PlayerId == item.PlayerId;
-                        await _dwPlayerRepository.AddIfNotExist(item,predicate);
+                    var playersId = mapped.Select(x=>x.PlayerId);
+                    var exists = await _dwPlayerRepository.GetListByFilter(x => playersId.Contains(x.PlayerId));
+
+                    if(exists.Any()) {
+                        var idsExists = exists.Select(x => x.PlayerId).ToList();
+                        mapped.RemoveAll(x=>idsExists.Contains(x.PlayerId));
+                    }
+                    if(mapped.Any()) {
+                        await _dwPlayerRepository.BulkInsert(mapped);
                         await _dwPlayerRepository.SaveChanges();
                     }
+                    //foreach(var item in mapped) {
+                    //    Expression<Func<DWPlayer, bool>> predicate = c => c.PlayerId == item.PlayerId;
+                    //    await _dwPlayerRepository.AddIfNotExist(item, predicate);
+                    //    await _dwPlayerRepository.SaveChanges();
+                    //}
                 }
                 response = true;
 
@@ -53,5 +64,34 @@ public class MigrarPlayersCommand : IRequest<bool>{
             }
             return response;
         }
+        //public async Task<bool> Handle(MigrarPlayersCommand request, CancellationToken cancellationToken) {
+        //    bool response = false;
+        //    var batchSize = 1000;
+        //    uint lastId = 0;
+        //    try {
+        //        var lastRecord = await _dwPlayerRepository.GetLastRecord();
+        //        if(lastRecord != null) {
+        //            lastId = lastRecord.PlayerId;
+        //        }
+        //        var totalRecords = await _playerRepository.GetTotalRecordsById(lastId);
+        //        var batchCount = (totalRecords + batchSize - 1)/batchSize;
+        //        for(int i = 0; i <= batchCount; i++) {
+        //            var startIndex = i* batchSize;
+        //            var batch = await _playerRepository.GetPaginatedById(startIndex, batchSize, lastId);
+        //            var mapped = _mapper.Map<List<DWPlayer>>(batch);
+        //            foreach(var item in mapped) {
+        //                Expression<Func<DWPlayer,bool>> predicate = c => c.PlayerId == item.PlayerId;
+        //                await _dwPlayerRepository.AddIfNotExist(item,predicate);
+        //                await _dwPlayerRepository.SaveChanges();
+        //            }
+        //        }
+        //        response = true;
+
+        //    } catch(Exception ex) {
+        //        _logger.LogError($"MigrarPlayersCommandHandler - {ex.Message}");
+        //        response = false;
+        //    }
+        //    return response;
+        //}
     }
 }
