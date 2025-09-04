@@ -29,11 +29,23 @@ public class MigrarProcessorCommand : IRequest<bool>{
             try {
                 var remoto = await _processorRepository.GetAll();
                 var registros = _mapper.Map<List<DWProcessor>>(remoto);
-                foreach (var registro in registros) {
-                    Expression<Func<DWProcessor,bool>> predicate = c => c.ProcessorId == registro.ProcessorId;
-                    await _dwProcessorRepository.AddIfNotExist(registro, predicate);
+
+                var idsProcessor = registros.Select(x => x.ProcessorId);
+                var registrosExistentes = await _dwProcessorRepository.GetListByFilter(x => idsProcessor.Contains(x.ProcessorId));
+
+                if(registrosExistentes.Any()) {
+                    var idsExistentes = registrosExistentes.Select(x => x.ProcessorId);
+                    registros.RemoveAll(x => idsExistentes.Contains(x.ProcessorId));
+                }
+                if(registros.Count != 0) {
+                    await _dwProcessorRepository.BulkInsert(registros);
                     await _dwProcessorRepository.SaveChanges();
                 }
+                //foreach (var registro in registros) {
+                //    Expression<Func<DWProcessor,bool>> predicate = c => c.ProcessorId == registro.ProcessorId;
+                //    await _dwProcessorRepository.AddIfNotExist(registro, predicate);
+                //    await _dwProcessorRepository.SaveChanges();
+                //}
                 response = true;
             } catch(Exception ex) {
                 _logger.LogError($"MigrarProcessorCommandHandler - {ex.Message}");

@@ -290,9 +290,9 @@ namespace DWPersistence.Migrations
                         .HasComment("1 -> Tag, 2 -> Segment");
 
                     b.HasKey("GroupId")
-                        .HasName("PK_Groupsx");
+                        .HasName("PK_Groups");
 
-                    b.ToTable("Groupsxs", (string)null);
+                    b.ToTable("Groupsx", (string)null);
                 });
 
             modelBuilder.Entity("DWDomain.DWPaymentMethod", b =>

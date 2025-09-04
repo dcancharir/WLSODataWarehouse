@@ -16,17 +16,17 @@ using Quartz;
 using System.Net.NetworkInformation;
 namespace wlsomigratesdbdatawarehouseapi.Jobs;
 [DisallowConcurrentExecution]
-public class MigracionDiariaJob : IJob{
+public class MigracionWSLOJob : IJob{
     private readonly IServiceProvider _serviceProvider;
 
-    public MigracionDiariaJob(IServiceProvider serviceProvider) {
+    public MigracionWSLOJob(IServiceProvider serviceProvider) {
         _serviceProvider = serviceProvider;
     }
     public async Task Execute(IJobExecutionContext context) {
         using(IServiceScope scope = _serviceProvider.CreateScope()) {
             var _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-            var _logger = scope.ServiceProvider.GetRequiredService<ILogger<MigracionDiariaJob>>();
-            _logger.LogInformation($"Job MigracionDiariaJob iniciado");
+            var _logger = scope.ServiceProvider.GetRequiredService<ILogger<MigracionWSLOJob>>();
+            _logger.LogInformation($"Job MigracionWSLOJob iniciado");
             _logger.LogInformation($"Metodo AssociateMigration iniciado");
             await AssociateMigration(_mediator);
             _logger.LogInformation($"Metodo BrandMigration iniciado");
@@ -53,9 +53,7 @@ public class MigracionDiariaJob : IJob{
             await StoreMigration(_mediator);
             _logger.LogInformation($"Metodo StoreTxMigration iniciado");
             await StoreTxMigration(_mediator);
-
-
-            _logger.LogInformation($"Job MigracionDiariaJob terminado");
+            _logger.LogInformation($"Job MigracionWSLOJob terminado");
         }
         await Task.CompletedTask;
     }

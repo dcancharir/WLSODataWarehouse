@@ -62,7 +62,7 @@ builder.Services.AddDbContext<DataWarehouseContext>(options => {
 builder.Services.AddQuartz(q => {
     if(realizarMigracion) {
         JobKey key = new JobKey("MigracionDiariaJob");
-        q.AddJob<MigracionDiariaJob>(jobConfig => jobConfig.WithIdentity(key));
+        q.AddJob<MigracionWSLOJob>(jobConfig => jobConfig.WithIdentity(key));
         q.AddTrigger(opts => opts
                 .ForJob(key)
                 .WithIdentity("MigracionDiariaJob-trigger")

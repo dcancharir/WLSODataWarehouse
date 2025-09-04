@@ -27,27 +27,24 @@ public class MigrarBrandCommand :IRequest<bool>{
         public async Task<bool> Handle(MigrarBrandCommand request,CancellationToken cancellationToken) {
             bool response = false;
             try {
-                var registros =await _brandRepository.GetAll();
+                var registros = await _brandRepository.GetAll();
                 if(!registros.Any()) {
                     _logger.LogWarning($"MigrarBrandCommandHandler - No se encontraron registros a migrar");
                     return true;
                 }
-                var existentes = await _dwBrandRepository.GetListByFilter(x => registros.Select(y => y.BrandId).Contains(x.BrandId));
+                var mapped = _mapper.Map<List<DWBrand>>(registros);
+                var idsBrands = mapped.Select(x => x.BrandId.ToLower().Trim());
 
-                var listaBrandsId = existentes.Select(x => x.BrandId);
+                var existentes = await _dwBrandRepository.GetListByFilter(x => idsBrands.Contains(x.BrandId.ToLower().Trim()));
 
-                var registrosMapear = registros.Where(x => !listaBrandsId.Contains(x.BrandId));
-                var registrosMapeados = _mapper.Map<List<DWBrand>>(registrosMapear);
-
-                if(registrosMapeados.Any()) {
-                    await _dwBrandRepository.BulkInsert(registrosMapeados);
+                if(existentes.Any()) {
+                    var idsExistentes = existentes.Select(x => x.BrandId.ToLower().Trim());
+                    mapped.RemoveAll(x => idsExistentes.Contains(x.BrandId.ToLower().Trim()));
+                }
+                if(mapped.Any()) {
+                    await _dwBrandRepository.BulkInsert(mapped);
                     await _dwBrandRepository.BulkSaveChanges();
                 }
-                //foreach(var item in registros) {
-                //    Expression<Func<DWBrand,bool>> predicate = c => c.BrandId == item.BrandId;
-                //    await _dwBrandRepository.AddIfNotExist(item,predicate);
-                //    await _dwBrandRepository.SaveChanges();
-                //}
                 response = true;
             } catch(Exception ex) {
                 _logger.LogError($"MigrarBrandCommandHandler - {ex.Message}");

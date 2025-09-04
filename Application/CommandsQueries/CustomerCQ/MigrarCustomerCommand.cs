@@ -3,6 +3,7 @@ using Application.IRepositories.MySql;
 using AutoMapper;
 using DWDomain;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
@@ -13,11 +14,15 @@ public class MigrarCustomerCommand :IRequest<bool>{
         private readonly ILogger<MigrarCustomerCommandHandler> _logger;
         private readonly IDWCustomerRepository _dwCustomerRepository;
         private readonly ICustomerRepository _customerRepository;
-        public MigrarCustomerCommandHandler(IMapper mapper, ILogger<MigrarCustomerCommandHandler> logger, IDWCustomerRepository dwCustomerRepository, ICustomerRepository customerRepository) {
+        private readonly IConfiguration _configuration;
+        private int LimitePorPaginacion = 1000;
+        public MigrarCustomerCommandHandler(IMapper mapper, ILogger<MigrarCustomerCommandHandler> logger, IDWCustomerRepository dwCustomerRepository, ICustomerRepository customerRepository, IConfiguration configuration) {
             _mapper = mapper;
             _logger = logger;
             _dwCustomerRepository = dwCustomerRepository;
             _customerRepository = customerRepository;
+            _configuration = configuration;
+            LimitePorPaginacion = Convert.ToInt32(_configuration.GetSection("Variables")["LimitePorPaginacion"]);
         }
         public async Task<bool> Handle(MigrarCustomerCommand request,CancellationToken cancellationToken) {
             bool response = false;
@@ -27,7 +32,7 @@ public class MigrarCustomerCommand :IRequest<bool>{
                 while(continuarTarea) {
                     continuarTarea = false;
                     await Task.Delay(delay);
-                    const int totalItems = 1000;
+                    //const int totalItems = 1000;
                     DateTime lastDate = new DateTime(year: 1753, month: 1, day: 1);
                     var lastRecord = await _dwCustomerRepository.GetLastRecordByRegDateTime();
                     var totalRegistros = await _dwCustomerRepository.GetTotalRecords();
@@ -38,7 +43,7 @@ public class MigrarCustomerCommand :IRequest<bool>{
                     if(lastRecord != null) {
                         lastDate = Convert.ToDateTime(lastRecord.RegDatetime);
                     }
-                    var registros = await _customerRepository.GetByDate(lastDate, totalItems);
+                    var registros = await _customerRepository.GetByDate(lastDate, LimitePorPaginacion);
                     if(registros.Any()) {
                         var existentes = await _dwCustomerRepository.GetListByFilter(x => registros.Select(y => y.PlayerId).Contains(x.PlayerId));
                         var listaIds = existentes.Select(x => x.PlayerId);

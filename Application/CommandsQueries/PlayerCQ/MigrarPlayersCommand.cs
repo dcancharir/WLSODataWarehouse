@@ -3,9 +3,11 @@ using Application.IRepositories.MySql;
 using AutoMapper;
 using DWDomain;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -18,15 +20,19 @@ public class MigrarPlayersCommand : IRequest<bool>{
         private readonly IDWPlayerRepository _dwPlayerRepository;
         private readonly ILogger<MigrarPlayersCommandHandler> _logger;
         private readonly IMapper _mapper;
-        public MigrarPlayersCommandHandler(IPlayerRepository playerRepository, IDWPlayerRepository dwPlayerRepository, ILogger<MigrarPlayersCommandHandler> logger, IMapper mapper) {
+        private readonly IConfiguration _configuration;
+        private int LimitePorPaginacion;
+        public MigrarPlayersCommandHandler(IPlayerRepository playerRepository, IDWPlayerRepository dwPlayerRepository, ILogger<MigrarPlayersCommandHandler> logger, IMapper mapper, IConfiguration configuracion) {
             _playerRepository = playerRepository;
             _dwPlayerRepository = dwPlayerRepository;
             _logger = logger;
             _mapper = mapper;
+            _configuration = configuracion;
+            LimitePorPaginacion = Convert.ToInt32(_configuration.GetSection("Variables")["LimitePorPaginacion"]);
         }
         public async Task<bool> Handle(MigrarPlayersCommand request, CancellationToken cancellationToken) {
             bool response = false;
-            var batchSize = 1000;
+            var batchSize = LimitePorPaginacion;
             uint lastId = 0;
             try {
                 var lastRecord = await _dwPlayerRepository.GetLastRecord();

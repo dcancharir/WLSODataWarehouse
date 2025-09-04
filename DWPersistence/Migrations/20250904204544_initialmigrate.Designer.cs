@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DWPersistence.Migrations
 {
     [DbContext(typeof(DataWarehouseContext))]
-    [Migration("20250411204316_InitialMigrate")]
-    partial class InitialMigrate
+    [Migration("20250904204544_initialmigrate")]
+    partial class initialmigrate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -293,9 +293,9 @@ namespace DWPersistence.Migrations
                         .HasComment("1 -> Tag, 2 -> Segment");
 
                     b.HasKey("GroupId")
-                        .HasName("PK_Groupsx");
+                        .HasName("PK_Groups");
 
-                    b.ToTable("Groupsxs", (string)null);
+                    b.ToTable("Groupsx", (string)null);
                 });
 
             modelBuilder.Entity("DWDomain.DWPaymentMethod", b =>

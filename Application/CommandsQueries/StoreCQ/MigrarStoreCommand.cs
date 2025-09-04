@@ -29,11 +29,24 @@ public class MigrarStoreCommand : IRequest<bool>{
             try {
                 var remoto = await _storeRepository.GetAll();
                 var registros = _mapper.Map<List<DWStore>>(remoto);
-                foreach(var item in registros) {
-                    Expression<Func<DWStore, bool>> predicate = c => c.StoreId == item.StoreId;
-                    await _dwStoreRepository.AddIfNotExist(item, predicate);
+
+                var idsStores = registros.Select(x => x.StoreId.ToLower().Trim());
+                var registrosExistentes = await _dwStoreRepository.GetListByFilter(x => idsStores.Contains(x.StoreId.ToLower().Trim()));
+
+                if(registrosExistentes.Any()) {
+                    var idsExistentes = registrosExistentes.Select(x => x.StoreId.ToLower().Trim());
+                    registros.RemoveAll(x => idsExistentes.Contains(x.StoreId.ToLower().Trim()));
+                }
+
+                if(registros.Count != 0) {
+                    await _dwStoreRepository.BulkInsert(registros);
                     await _dwStoreRepository.SaveChanges();
                 }
+                //foreach(var item in registros) {
+                //    Expression<Func<DWStore, bool>> predicate = c => c.StoreId == item.StoreId;
+                //    await _dwStoreRepository.AddIfNotExist(item, predicate);
+                //    await _dwStoreRepository.SaveChanges();
+                //}
                 response = true;
             } catch(Exception ex) {
                 _logger.LogError($"MigrarStoreCommandHandler - {ex.Message}");

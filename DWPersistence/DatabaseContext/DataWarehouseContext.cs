@@ -15,7 +15,7 @@ public partial class DataWarehouseContext : DbContext{
 
     public virtual DbSet<DWGame> DWGames { get; set; }
 
-    public virtual DbSet<DWGroupsx> DWGroupsxes { get; set; }
+    public virtual DbSet<DWGroupsx> DWGroupsxs { get; set; }
 
     public virtual DbSet<DWPaymentMethod> DWPaymentMethods { get; set; }
 
@@ -108,9 +108,9 @@ public partial class DataWarehouseContext : DbContext{
 
         modelBuilder.Entity<DWGroupsx>(entity =>
         {
-            entity.HasKey(e => e.GroupId).HasName("PK_Groupsx");
+            entity.HasKey(e => e.GroupId).HasName("PK_Groups");
 
-            entity.ToTable("Groupsxs");
+            entity.ToTable("Groupsx");
 
             entity.Property(e => e.GroupId)
                 .ValueGeneratedNever()

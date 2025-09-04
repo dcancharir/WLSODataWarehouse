@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace DWDomain;
+[Table("Groupsx")]
 public class DWGroupsx {
     /// <summary>
     /// Id del Tag

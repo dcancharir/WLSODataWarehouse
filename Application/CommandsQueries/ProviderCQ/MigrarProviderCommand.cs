@@ -29,11 +29,23 @@ public class MigrarProviderCommand : IRequest<bool>{
             try {
                 var remoto = await _providerRepository.GetAll();
                 var registros = _mapper.Map<List<DWProvider>>(remoto);
-                foreach (var registro in registros) {
-                    Expression<Func<DWProvider, bool>> predicate = c => c.ProviderId == registro.ProviderId;
-                    await _dwProviderRepository.AddIfNotExist(registro, predicate);
+                var idsProvider = registros.Select(x => x.ProviderId);
+
+                var registrosExistentes = await _dwProviderRepository.GetListByFilter(x => idsProvider.Contains(x.ProviderId));
+
+                if(registrosExistentes.Any()) {
+                    var idsExistentes = registrosExistentes.Select(x => x.ProviderId);
+                    registros.RemoveAll(x=>idsExistentes.Contains(x.ProviderId));
+                }
+                if(registros.Count != 0) {
+                    await _dwProviderRepository.BulkInsert(registros);
                     await _dwProviderRepository.SaveChanges();
                 }
+                //foreach (var registro in registros) {
+                //    Expression<Func<DWProvider, bool>> predicate = c => c.ProviderId == registro.ProviderId;
+                //    await _dwProviderRepository.AddIfNotExist(registro, predicate);
+                //    await _dwProviderRepository.SaveChanges();
+                //}
                 response = true;
             } catch(Exception ex) {
                 _logger.LogError($"MigrarProviderCommandHandler - {ex.Message}");

@@ -29,11 +29,21 @@ public class MigrarGroupsxCommand : IRequest<bool>{
             try {
                 var remoto = await _groupsxRepository.GetAll();
                 var registros = _mapper.Map<List<DWGroupsx>>(remoto);
-                foreach(var item in registros) {
-                    Expression<Func<DWGroupsx,bool>> predicate = c => c.GroupId == item.GroupId;
-                    await _dwGroupsxRepository.AddIfNotExist(item, predicate);
+                var groupsIds = registros.Select(x => x.GroupId);
+                var exists = await _dwGroupsxRepository.GetListByFilter(x => groupsIds.Contains(x.GroupId));
+                if(exists.Any()) {
+                    var idsExists = exists.Select(x=>x.GroupId);
+                    registros.RemoveAll(x => idsExists.Contains(x.GroupId));
+                }
+                if(registros.Any()) {
+                    await _dwGroupsxRepository.BulkInsert(registros);
                     await _dwGroupsxRepository.SaveChanges();
                 }
+                //foreach(var item in registros) {
+                //    Expression<Func<DWGroupsx,bool>> predicate = c => c.GroupId == item.GroupId;
+                //    await _dwGroupsxRepository.AddIfNotExist(item, predicate);
+                //    await _dwGroupsxRepository.SaveChanges();
+                //}
                 response = true;
             } catch(Exception ex) {
                 _logger.LogError($"MigrarGroupsxCommandHandler - {ex.Message}");

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DWPersistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigrate : Migration
+    public partial class initialmigrate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -99,7 +99,7 @@ namespace DWPersistence.Migrations
                 comment: "Informacion de los Games");
 
             migrationBuilder.CreateTable(
-                name: "Groupsxs",
+                name: "Groupsx",
                 columns: table => new
                 {
                     groupId = table.Column<int>(type: "int", nullable: false, comment: "Id del Tag"),
@@ -109,7 +109,7 @@ namespace DWPersistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Groupsx", x => x.groupId);
+                    table.PrimaryKey("PK_Groups", x => x.groupId);
                 });
 
             migrationBuilder.CreateTable(
@@ -251,7 +251,7 @@ namespace DWPersistence.Migrations
                 name: "Games");
 
             migrationBuilder.DropTable(
-                name: "Groupsxs");
+                name: "Groupsx");
 
             migrationBuilder.DropTable(
                 name: "PaymentMethods");
