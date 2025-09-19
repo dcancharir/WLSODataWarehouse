@@ -68,4 +68,21 @@ public class DWBaseRepository<T> : IDWBaseRepository<T> where T : class {
     public async Task BulkSaveChanges() { 
         await _context.BulkSaveChangesAsync();
     }
+    public async Task<IEnumerable<TResult>> GetListByFilter<TResult>(Expression<Func<T, bool>> filter,Expression<Func<T,TResult>> selector) {
+        IQueryable<T> query = _context.Set<T>();
+
+        if(filter != null) {
+            query = query.Where(filter);
+        }
+        if(selector != null) {
+            return await query.Select(selector).ToListAsync();
+        }
+
+        //si no se paso selector se devuelve toda la entidad
+        return (IEnumerable<TResult>)(object)await query.ToListAsync();
+
+
+        //var result = filter == null ? await _context.Set<T>().ToListAsync() : await _context.Set<T>().Where(filter).ToListAsync();
+        //return result;
+    }
 }

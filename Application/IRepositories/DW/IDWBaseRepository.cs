@@ -13,4 +13,5 @@ public interface IDWBaseRepository<T> where T:class {
     Task AddRange(List<T> entities);
     Task BulkInsert(List<T> entities);
     Task BulkSaveChanges();
+    Task<IEnumerable<TResult>> GetListByFilter<TResult>(Expression<Func<T, bool>> filter, Expression<Func<T, TResult>> selector);
 }

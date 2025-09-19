@@ -3,6 +3,7 @@ using Application.IRepositories.MySql;
 using AutoMapper;
 using DWDomain;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -18,11 +19,15 @@ public class MigrarStoreTxCommand : IRequest<bool>{
         private readonly IStoreTxRepository _storeTxRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<MigrarStoreTxCommandHandler> _logger;
-        public MigrarStoreTxCommandHandler(IDWStoreTxRepository dwStoreTxRepository, IStoreTxRepository storeTxRepository, IMapper mapper, ILogger<MigrarStoreTxCommandHandler> logger) {
+        private readonly IConfiguration _configuration;
+        private int LimitePorPaginacion;
+        public MigrarStoreTxCommandHandler(IDWStoreTxRepository dwStoreTxRepository, IStoreTxRepository storeTxRepository, IMapper mapper, ILogger<MigrarStoreTxCommandHandler> logger, IConfiguration configuration) {
             _dwStoreTxRepository = dwStoreTxRepository;
             _storeTxRepository = storeTxRepository;
             _mapper = mapper;
             _logger = logger;
+            _configuration = configuration;
+            LimitePorPaginacion = Convert.ToInt32(_configuration.GetSection("Variables")["LimitePorPaginacion"]);
         }
         public async Task<bool> Handle(MigrarStoreTxCommand request, CancellationToken cancellationToken) {
             bool response;
@@ -30,7 +35,7 @@ public class MigrarStoreTxCommand : IRequest<bool>{
                 var remoto = await _storeTxRepository.GetAll();
                 var registros = _mapper.Map<List<DWStoreTx>>(remoto);
                 var storeTxsId = registros.Select(x => x.TxId);
-                var exists = await _dwStoreTxRepository.GetListByFilter(x=>storeTxsId.Contains(x.TxId));
+                var exists = await _dwStoreTxRepository.GetListByFilter(x => storeTxsId.Contains(x.TxId));
                 if(exists.Any()) {
                     var idsExists = exists.Select(x => x.TxId);
                     registros.RemoveAll(x => idsExists.Contains(x.TxId));
