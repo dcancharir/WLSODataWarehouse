@@ -38,7 +38,7 @@ public class CustomerRepository : MySqlBaseRepository<Customer>, ICustomerReposi
 `addressDist`, 
 `address`,  
 CAST(`identId` as CHAR(250)) as identId,  
-`identification` 
+  `identification` ,CAST(`ip` as CHAR(39)) as ip,`lastLoginTimestamp` 
 FROM `Customers` where `regDatetime` >= {fecha} order by `regDatetime` asc LIMIT {pageSize} offset {offset};
 ";
         var result = await _context.Customers.FromSql(query).AsNoTracking().ToListAsync();
@@ -66,7 +66,7 @@ FROM `Customers` where `regDatetime` >= {fecha} order by `regDatetime` asc LIMIT
         `addressDist`, 
         `address`,  
         CAST(`identId` as CHAR(250)) as identId,  
-        `identification` 
+ `identification` ,CAST(`ip` as CHAR(39)) as ip,`lastLoginTimestamp`
         FROM `Customers` where `regDatetime` >= {fecha} order by `regDatetime` asc LIMIT {limit};
         ";
         var result = await _context.Customers.FromSql(query).AsNoTracking().ToListAsync();

@@ -41,7 +41,7 @@ public class MigrarPaymentMethodCommand : IRequest<bool>{
                 }
                 if(registros.Count != 0) {
                     await _dwPaymentMethodRepository.BulkInsert(registros);
-                    await _dwPaymentMethodRepository.SaveChanges();
+                    await _dwPaymentMethodRepository.BulkSaveChanges();
                 }
                 //foreach (var item in registros) {
                 //    Expression<Func<DWPaymentMethod,bool>> predicate = c => c.MethodId == item.MethodId && c.Type == item.Type;

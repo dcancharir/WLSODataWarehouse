@@ -28,6 +28,10 @@ public partial class MySqlContext : DbContext {
     public virtual DbSet<Store> Stores { get; set; }
 
     public virtual DbSet<StoreTx> StoreTxs { get; set; }
+    public virtual DbSet<Bonuse> Bonuses { get; set; }
+    public virtual DbSet<BonusesStatus> BonusesStatuses { get; set; }
+    public virtual DbSet<BonusStatusLog> BonusStatusLog { get;}
+    public virtual DbSet<User> Users { get; set; }
     //protected override void OnModelCreating(ModelBuilder modelBuilder) {
     //    modelBuilder
     //        .UseCollation("utf8mb4_general_ci")

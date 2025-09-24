@@ -89,4 +89,16 @@ public partial class Customer
     [Column("identification")]
     [StringLength(50)]
     public string? Identification { get; set; }
+    /// <summary>
+    /// IP usada al momento del registro
+    /// </summary>
+    [Column("ip")]
+    [MaxLength(39)]
+    public string? Ip { get; set; }
+
+    /// <summary>
+    /// Epoch ultima session
+    /// </summary>
+    [Column("lastLoginTimestamp", TypeName = "bigint(20)")]
+    public long? LastLoginTimestamp { get; set; }
 }

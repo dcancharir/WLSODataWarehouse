@@ -24,5 +24,9 @@ public class MapperProfiles : Profile{
         CreateMap<RealGameEvent, DWRealGameEvent>().ReverseMap();
         CreateMap<Store, DWStore>().ReverseMap();
         CreateMap<StoreTx, DWStoreTx>().ReverseMap();
+        CreateMap<Bonuse,DWBonuse>().ReverseMap();
+        CreateMap<BonusesStatus,DWBonusesStatus>().ReverseMap();
+        CreateMap<BonusStatusLog,DWBonusStatusLog>().ReverseMap();
+        CreateMap<User, DWUser>().ReverseMap();
     }
 }

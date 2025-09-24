@@ -54,7 +54,7 @@ public class MigrarPlayersCommand : IRequest<bool>{
                     }
                     if(mapped.Any()) {
                         await _dwPlayerRepository.BulkInsert(mapped);
-                        await _dwPlayerRepository.SaveChanges();
+                        await _dwPlayerRepository.BulkSaveChanges();
                     }
                     //foreach(var item in mapped) {
                     //    Expression<Func<DWPlayer, bool>> predicate = c => c.PlayerId == item.PlayerId;

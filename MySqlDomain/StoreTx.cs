@@ -116,4 +116,9 @@ public partial class StoreTx
     [Column("associateId")]
     [StringLength(11)]
     public string? AssociateId { get; set; }
+    /// <summary>
+    /// Epoch registro
+    /// </summary>
+    [Column("insTimestamp", TypeName = "bigint(20)")]
+    public long? InsTimestamp { get; set; }
 }

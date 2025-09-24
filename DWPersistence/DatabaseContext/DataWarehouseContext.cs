@@ -1,5 +1,6 @@
 ﻿using DWDomain;
 using Microsoft.EntityFrameworkCore;
+using MySqlDomain;
 namespace DWPersistence.DataBaseContext;
 public partial class DataWarehouseContext : DbContext{
     public DataWarehouseContext(DbContextOptions<DataWarehouseContext> options) : base(options)
@@ -30,6 +31,11 @@ public partial class DataWarehouseContext : DbContext{
     public virtual DbSet<DWStore> DWStores { get; set; }
 
     public virtual DbSet<DWStoreTx> DWStoreTxs { get; set; }
+
+    public virtual DbSet<DWBonuse> DWBonuses { get; set; }
+    public virtual DbSet<DWBonusStatusLog> DWBonusStatusLogs { get; set; }
+    public virtual DbSet<DWUser> DWUsers { get; set; }
+    public virtual DbSet<DWBonusesStatus> DWBonusesStatuses { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<DWAssociate>(entity =>
         {
@@ -48,7 +54,57 @@ public partial class DataWarehouseContext : DbContext{
                 .HasDefaultValue(Convert.ToByte(1))
                 .HasComment("Estado del asociado");
         });
+        modelBuilder.Entity<DWBonuse>(entity => {
 
+            entity.ToTable(tb => tb.HasComment("Tabla de los bonos asignados"));
+
+            entity.Property(e => e.BonusId)
+                .ValueGeneratedNever()
+                .HasComment("Id del bono");
+            entity.Property(e => e.ActivatedTimestamp).HasComment("activaite epoch");
+            entity.Property(e => e.Amount)
+                .HasDefaultValue(Convert.ToInt64(0))
+                .HasComment("Monto del bono");
+            entity.Property(e => e.AmountWin).HasComment("Monto ganado o balance conseguido con el bono antes de hacer la conversion.");
+            entity.Property(e => e.EndTimestamp).HasComment("expirate epoch");
+            entity.Property(e => e.InsTimestamp).HasComment("epoch de registro");
+            entity.Property(e => e.PlayerIdBonus).HasComment("Id del player");
+            entity.Property(e => e.PlayerIdReal).HasComment("Id del player");
+            entity.Property(e => e.PromoId).HasComment("Id de la promoción");
+            entity.Property(e => e.Status)
+                .HasDefaultValue(Convert.ToByte(0))
+                .HasComment("Estado del bono");
+            entity.Property(e => e.TxAmount).HasComment("Monto de la transacción con la que se accedio al bono");
+            entity.Property(e => e.TxPayOutAmount).HasComment("Monto pagado");
+        });
+
+        modelBuilder.Entity<DWBonusesStatus>(entity => {
+
+            entity.Property(e => e.Status)
+                .ValueGeneratedNever()
+                .HasComment("Id");
+            entity.Property(e => e.Desc).HasComment("Name");
+            entity.Property(e => e.InsDate).HasComment("Fecha insercion");
+            entity.Property(e => e.InsDatetime).HasComment("Fecha Hora insercion");
+            entity.Property(e => e.InsTimestamp).HasComment("Epoch insercion");
+            entity.Property(e => e.InsUserId).HasComment("Usuario insercion");
+            entity.Property(e => e.Name).HasComment("Name");
+        });
+        modelBuilder.Entity<DWBonusStatusLog>(entity => {
+
+            entity.ToTable("BonusStatusLog", tb => tb.HasComment("Log de cambio de Status de los Bonos"));
+
+            entity.Property(e => e.LogId)
+                .ValueGeneratedNever()
+                .HasComment("Id de Log");
+            entity.Property(e => e.BonusId).HasComment("Id de Bono");
+            entity.Property(e => e.PromoId).HasComment("Id de la promoción");
+            entity.Property(e => e.SetDate).HasComment("Fecha actualizacion de status");
+            entity.Property(e => e.SetDatetime).HasComment("Fecha Hora actualizacion de status");
+            entity.Property(e => e.Status)
+                .IsFixedLength()
+                .HasComment("Status del bono. Valores: assigned, applied, expired, finished, canceled, etc");
+        });
         modelBuilder.Entity<DWBrand>(entity =>
         {
             entity.HasKey(e => e.BrandId).HasName("PK_Brand");
@@ -104,6 +160,7 @@ public partial class DataWarehouseContext : DbContext{
             entity.Property(e => e.Active).HasDefaultValue(Convert.ToSByte(1)).HasComment("1 -> Activo | 0 -> Inactivo");
             entity.Property(e => e.BrandId).IsFixedLength().HasComment("ID de brand");
             entity.Property(e => e.NameBack).IsFixedLength().HasComment("Descripcion del game");
+            entity.Property(e => e.Type).IsFixedLength().HasComment("Tipo de juego: SLOTS, SPORTS, CASINO, POKER, etc...");
         });
 
         modelBuilder.Entity<DWGroupsx>(entity =>
@@ -209,6 +266,7 @@ public partial class DataWarehouseContext : DbContext{
             entity.Property(e => e.CoinsBefore).HasDefaultValue(Convert.ToInt64(-1)).HasComment("Coins reales antes");
             entity.Property(e => e.EndDatetime).HasComment("Fecha y hora de finalización");
             entity.Property(e => e.EndTimestamp).HasComment("Epoch final");
+            entity.Property(e => e.InsTimestamp).HasComment("Epoch registro");
             entity.Property(e => e.InsUserId).HasComment("Usuario que hizo la operación");
             entity.Property(e => e.PaymentMethodId).HasDefaultValue("MANUAL").IsFixedLength().HasComment("Método de pago");
             entity.Property(e => e.PlayerId).HasComment("Id del player");
@@ -218,6 +276,12 @@ public partial class DataWarehouseContext : DbContext{
             entity.Property(e => e.SubType).HasDefaultValue("NORMAL").IsFixedLength().HasComment("BONO_FINALIZE");
             entity.Property(e => e.Type).IsFixedLength().HasComment("DEBIT | CREDIT | ...");
             entity.Property(e => e.UserStoreId).IsFixedLength().HasComment("Id de la tienda");
+        });
+        modelBuilder.Entity<DWUser>(entity => {
+
+            entity.Property(e => e.UserId).ValueGeneratedNever();
+            entity.Property(e => e.FirstName).HasDefaultValue("");
+            entity.Property(e => e.LastName).HasDefaultValue("");
         });
 
         OnModelCreatingPartial(modelBuilder);

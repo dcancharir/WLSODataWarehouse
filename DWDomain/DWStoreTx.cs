@@ -100,4 +100,9 @@ public partial class DWStoreTx {
     [Column("associateId")]
     [StringLength(11)]
     public string? AssociateId { get; set; }
+    /// <summary>
+    /// Epoch registro
+    /// </summary>
+    [Column("insTimestamp")]
+    public long? InsTimestamp { get; set; }
 }

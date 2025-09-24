@@ -1,4 +1,7 @@
 ﻿using Application.CommandsQueries.AssociateCQ;
+using Application.CommandsQueries.BonusesCQ;
+using Application.CommandsQueries.BonusesStatusCQ;
+using Application.CommandsQueries.BonusStatusLogCQ;
 using Application.CommandsQueries.BrandCQ;
 using Application.CommandsQueries.CustomerCQ;
 using Application.CommandsQueries.CustomersGroupCQ;
@@ -11,6 +14,7 @@ using Application.CommandsQueries.ProviderCQ;
 using Application.CommandsQueries.RealGameEventCQ;
 using Application.CommandsQueries.StoreCQ;
 using Application.CommandsQueries.StoreTxCQ;
+using Application.CommandsQueries.UsersCQ;
 using MediatR;
 using Quartz;
 using System.Net.NetworkInformation;
@@ -27,6 +31,8 @@ public class MigracionWSLOJob : IJob{
             var _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
             var _logger = scope.ServiceProvider.GetRequiredService<ILogger<MigracionWSLOJob>>();
             _logger.LogInformation($"Job MigracionWSLOJob iniciado");
+            _logger.LogInformation($"Metodo RealGameEventMigration iniciado");
+            await RealGameEventMigration(_mediator);
             _logger.LogInformation($"Metodo AssociateMigration iniciado");
             await AssociateMigration(_mediator);
             _logger.LogInformation($"Metodo BrandMigration iniciado");
@@ -47,12 +53,18 @@ public class MigracionWSLOJob : IJob{
             await ProcessorMigration(_mediator);
             _logger.LogInformation($"Metodo ProviderMigration iniciado");
             await ProviderMigration(_mediator);
-            _logger.LogInformation($"Metodo RealGameEventMigration iniciado");
-            await RealGameEventMigration(_mediator);
             _logger.LogInformation($"Metodo StoreMigration iniciado");
             await StoreMigration(_mediator);
             _logger.LogInformation($"Metodo StoreTxMigration iniciado");
             await StoreTxMigration(_mediator);
+            _logger.LogInformation($"Metodo BonusesMigration iniciado");
+            await BonusesMigration(_mediator);
+            _logger.LogInformation($"Metodo BonusesStatusMigration iniciado");
+            await BonusesStatusMigration(_mediator);
+            _logger.LogInformation($"Metodo BonusStatusLogMigration iniciado");
+            await BonusStatusLogMigration(_mediator);
+            _logger.LogInformation($"Metodo UsersMigration iniciado");
+            await UsersMigration(_mediator);
             _logger.LogInformation($"Job MigracionWSLOJob terminado");
         }
         await Task.CompletedTask;
@@ -95,5 +107,17 @@ public class MigracionWSLOJob : IJob{
     }
     internal static async Task StoreTxMigration(IMediator _mediator) {
         await _mediator.Send(new MigrarStoreTxCommand() { });
+    }
+    internal static async Task BonusesMigration(IMediator _mediator) {
+        await _mediator.Send(new MigrarBonusesCommand() { });
+    }
+    internal static async Task BonusesStatusMigration(IMediator _mediator) {
+        await _mediator.Send(new MigrarBonusesStatusCommand() { });
+    }
+    internal static async Task BonusStatusLogMigration(IMediator _mediator) {
+        await _mediator.Send(new MigrarBonusStatusLogCommand() { });
+    }
+    internal static async Task UsersMigration(IMediator _mediator) {
+        await _mediator.Send(new MigrarUsersCommand() { });
     }
 }

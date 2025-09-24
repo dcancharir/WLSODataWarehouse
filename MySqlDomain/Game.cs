@@ -51,4 +51,10 @@ public partial class Game
     /// </summary>
     [Column("active")]
     public sbyte? Active { get; set; }
+    /// <summary>
+    /// Tipo de juego: SLOTS, SPORTS, CASINO, POKER, etc...
+    /// </summary>
+    [Column("type")]
+    [StringLength(60)]
+    public string? Type { get; set; }
 }
