@@ -26,5 +26,7 @@ public static class DependencyInjection {
         services.AddScoped<IDWBonusesStatusRepository,DWBonusesStatusRepository>();
         services.AddScoped<IDWBonusStatusLogRepository,DWBonusStatusLogRepository>();
         services.AddScoped<IDWUserRepository,DWUserRepository>();
+        services.AddScoped<IDWPromosRepository,DWPromosRepository>();
+        services.AddScoped<IDWStoreTxsStatusRepository,DWStoreTxsStatusRepository>();
     }
 }

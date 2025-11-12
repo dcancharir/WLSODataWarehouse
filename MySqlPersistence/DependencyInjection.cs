@@ -30,5 +30,7 @@ public static class DependencyInjection {
         services.AddScoped<IBonusesStatusRepository, BonusesStatusRepository>();
         services.AddScoped<IBonusStatusLogRepository,BonusStatusLogRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IPromosRepository, PromosRepository>();
+        services.AddScoped<IStoreTxsStatusRepository, StoreTxsStatusRepository>();
     }
 }

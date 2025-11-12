@@ -10,10 +10,12 @@ using Application.CommandsQueries.GroupsxCQ;
 using Application.CommandsQueries.PaymentMethodCQ;
 using Application.CommandsQueries.PlayerCQ;
 using Application.CommandsQueries.ProcessorCQ;
+using Application.CommandsQueries.PromosCQ;
 using Application.CommandsQueries.ProviderCQ;
 using Application.CommandsQueries.RealGameEventCQ;
 using Application.CommandsQueries.StoreCQ;
 using Application.CommandsQueries.StoreTxCQ;
+using Application.CommandsQueries.StoreTxsStatusCQ;
 using Application.CommandsQueries.UsersCQ;
 using MediatR;
 using Quartz;
@@ -65,6 +67,10 @@ public class MigracionWSLOJob : IJob{
             await BonusStatusLogMigration(_mediator);
             _logger.LogInformation($"Metodo UsersMigration iniciado");
             await UsersMigration(_mediator);
+            _logger.LogInformation($"Metodo PromosMigration iniciado");
+            await PromosMigration(_mediator);
+            _logger.LogInformation($"Metodo StoreTxsStatusMigration iniciado");
+            await StoreTxsStatusMigration(_mediator);
             _logger.LogInformation($"Job MigracionWSLOJob terminado");
         }
         await Task.CompletedTask;
@@ -119,5 +125,11 @@ public class MigracionWSLOJob : IJob{
     }
     internal static async Task UsersMigration(IMediator _mediator) {
         await _mediator.Send(new MigrarUsersCommand() { });
+    }
+    internal static async Task PromosMigration(IMediator _mediator) {
+        await _mediator.Send(new MigrarPromosCommand() { });
+    }
+    internal static async Task StoreTxsStatusMigration(IMediator _mediator) {
+        await _mediator.Send(new MigrarStoreTxsStatusCommand() { });
     }
 }

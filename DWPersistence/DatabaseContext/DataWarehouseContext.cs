@@ -1,6 +1,5 @@
 ﻿using DWDomain;
 using Microsoft.EntityFrameworkCore;
-using MySqlDomain;
 namespace DWPersistence.DataBaseContext;
 public partial class DataWarehouseContext : DbContext{
     public DataWarehouseContext(DbContextOptions<DataWarehouseContext> options) : base(options)
@@ -36,6 +35,8 @@ public partial class DataWarehouseContext : DbContext{
     public virtual DbSet<DWBonusStatusLog> DWBonusStatusLogs { get; set; }
     public virtual DbSet<DWUser> DWUsers { get; set; }
     public virtual DbSet<DWBonusesStatus> DWBonusesStatuses { get; set; }
+    public virtual DbSet<DWStoreTxsStatus> DWStoreTxsStatuses { get; set; }
+    public virtual DbSet<DWPromos> DWPromos { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<DWAssociate>(entity =>
         {
@@ -284,6 +285,38 @@ public partial class DataWarehouseContext : DbContext{
             entity.Property(e => e.LastName).HasDefaultValue("");
         });
 
+        modelBuilder.Entity<DWPromos>(entity => {
+            entity.ToTable("Promos");
+            entity.HasKey(e => e.PromoId);
+
+            entity.ToTable(tb => tb.HasComment("Tabla de las promociones"));
+
+            entity.Property(e => e.PromoId)
+                .ValueGeneratedNever()
+                .HasComment("Id de la promoción");
+            entity.Property(e => e.Description).HasComment("Descripción de la promoción");
+            entity.Property(e => e.EndDatetime).HasComment("Fecha Hora del fin de la promoción");
+            entity.Property(e => e.InsDatetime).HasComment("Fecha Hora registro");
+            entity.Property(e => e.InsUserId).HasComment("Id del usuario que registro la promoción");
+            entity.Property(e => e.Name).HasComment("Nombre de la promoción");
+            entity.Property(e => e.StartDateTime).HasComment("Vigencia-inicio. Fecha y hora UTC (sumando el timzone hora local)");
+            entity.Property(e => e.Status)
+                .HasDefaultValue(Convert.ToByte(0))
+                .HasComment("Estado de la promoción");
+        });
+        modelBuilder.Entity<DWStoreTxsStatus>(entity => {
+            entity.ToTable("StoreTxsStatus");
+            entity.HasKey(e => e.Status);
+
+            entity.Property(e => e.Status)
+                .ValueGeneratedNever()
+                .HasComment("Id");
+            entity.Property(e => e.InsDate).HasComment("Fecha insercion");
+            entity.Property(e => e.InsDatetime).HasComment("Fecha Hora insercion");
+            entity.Property(e => e.InsTimestamp).HasComment("Epoch insercion");
+            entity.Property(e => e.InsUserId).HasComment("Usuario insercion");
+            entity.Property(e => e.Name).HasComment("Name");
+        });
         OnModelCreatingPartial(modelBuilder);
     }
     //protected override void OnModelCreating(ModelBuilder modelBuilder) {
