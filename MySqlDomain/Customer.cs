@@ -101,4 +101,7 @@ public partial class Customer
     /// </summary>
     [Column("lastLoginTimestamp", TypeName = "bigint(20)")]
     public long? LastLoginTimestamp { get; set; }
+    
+    [Column("countryId")]
+    public string? CountryId { get; set; }
 }

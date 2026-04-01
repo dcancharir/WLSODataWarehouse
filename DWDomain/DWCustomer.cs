@@ -89,4 +89,8 @@ public partial class DWCustomer {
     /// </summary>
     [Column("lastLoginTimestamp")]
     public long? LastLoginTimestamp { get; set; }
+    
+    [Column("countryId")]
+    [StringLength(50)]
+    public string? CountryId { get; set; }
 }
