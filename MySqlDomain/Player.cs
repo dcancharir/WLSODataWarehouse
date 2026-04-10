@@ -29,4 +29,11 @@ public partial class Player
     /// </summary>
     [Column("coinsPayOut")]
     public ulong? CoinsPayOut { get; set; }
+
+    [Column("coinsType")]
+    [StringLength(15)]
+    public string CoinsType { get; set; } = null!;
+
+    [Column("playerIdRef")]
+    public uint? PlayerIdRef { get; set; }
 }

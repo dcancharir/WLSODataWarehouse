@@ -57,4 +57,16 @@ public partial class Game
     [Column("type")]
     [StringLength(60)]
     public string? Type { get; set; }
+
+    /// <summary>
+    /// ID de categoria
+    /// </summary>
+    [Column("categoryId")]
+    public uint CategoryId {  get; set; }
+
+    /// <summary>
+    /// Fecha Hora insercion
+    /// </summary>
+    [Column("insDatetime")]
+    public DateTime? InsDatetime { get; set; }
 }

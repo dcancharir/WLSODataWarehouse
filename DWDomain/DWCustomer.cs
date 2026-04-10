@@ -93,4 +93,57 @@ public partial class DWCustomer {
     [Column("countryId")]
     [StringLength(50)]
     public string? CountryId { get; set; }
+
+    /// <summary>
+    /// Fecha registro
+    /// </summary>
+    [Column("regDate")]
+    public DateTime? RegDate { get; set; }
+
+    /// <summary>
+    /// International Calling Code: +51 -> Peru
+    /// </summary>
+    [Column("icCode")]
+    [StringLength(5)]
+    public string? IcCode { get; set; }
+
+    /// <summary>
+    /// 1 -> Activo | 0 -> Inactivo
+    /// </summary>
+    [Column("phoneChecked")]
+    public sbyte? PhoneChecked { get; set; }
+
+    /// <summary>
+    /// 1 -> Activo | 0 -> Inactivo
+    /// </summary>
+    [Column("emailChecked")]
+    public sbyte? EmailChecked { get; set; }
+
+    [Column("city")]
+    [StringLength(100)]
+    public string? City { get; set; }
+
+    /// <summary>
+    /// Fecha ultima session
+    /// </summary>
+    [Column("lastLoginDatetime")]
+    public DateTime? LastLoginDatetime { get; set; }
+
+    /// <summary>
+    /// Fecha Hora actualizacion
+    /// </summary>
+    [Column("updDatetime")]
+    public DateTime? UpdDatetime { get; set; }
+
+    /// <summary>
+    /// Epoch registro
+    /// </summary>
+    [Column("regTimestamp", TypeName = "bigint")]
+    public long? RegTimestamp { get; set; }
+
+    /// <summary>
+    /// genero del customer. Femenino 0. Masculino -> 1, Otros -> 2
+    /// </summary>
+    [Column("gender")]
+    public sbyte? Gender { get; set; }
 }

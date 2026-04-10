@@ -30,7 +30,7 @@ public partial class MySqlContext : DbContext {
     public virtual DbSet<StoreTx> StoreTxs { get; set; }
     public virtual DbSet<Bonuse> Bonuses { get; set; }
     public virtual DbSet<BonusesStatus> BonusesStatuses { get; set; }
-    public virtual DbSet<BonusStatusLog> BonusStatusLog { get;}
+    public virtual DbSet<BonusStatusLog> BonusStatusLog { get; set; }
     public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<Promos> Promos { get; set; }
     public virtual DbSet<StoreTxsStatus> StoreTxsStatuses { get; set;}
