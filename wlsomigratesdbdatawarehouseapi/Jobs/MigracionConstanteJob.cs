@@ -19,10 +19,10 @@ public class MigracionConstanteJob : IJob {
 
             var diasBonuses = await _mediator.Send(new GetDiasFaltantesMigracionDWQuery { campo = "bonuses"});
             foreach(var dia in diasBonuses) {
-                var result = await MigrarBonusesCommand2(dia.fechaoperacion);
-                if(result) {
-                    await _mediator.Send(new UpdateMigracionDWCommand { campo = "afluenciahora", fecha = dia.fechaoperacion });
-                }
+                //var result = await MigrarBonusesCommand2(dia.fechaoperacion);
+                //if(result) {
+                //    await _mediator.Send(new UpdateMigracionDWCommand { campo = "afluenciahora", fecha = dia.fechaoperacion });
+                //}
             }
         }
     }
