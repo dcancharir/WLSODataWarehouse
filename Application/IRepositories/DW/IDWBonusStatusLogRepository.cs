@@ -7,4 +7,5 @@ using System.Threading.Tasks;
 
 namespace Application.IRepositories.DW;
 public interface IDWBonusStatusLogRepository : IDWBaseRepository<DWBonusStatusLog>{
+    Task RemoveByDateAsync(DateTime fechaOperacion);
 }

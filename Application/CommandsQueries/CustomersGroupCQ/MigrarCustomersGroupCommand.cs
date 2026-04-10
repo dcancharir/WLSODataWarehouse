@@ -30,7 +30,7 @@ public class MigrarCustomersGroupCommand :IRequest<bool>{
             try {
                 var totalMysql = await _customersGroupRepository.GetCountAll();
                 var totalSql = await _dwCustomersGroupRepository.GetCountAll();
-                if(totalMysql != totalSql) {
+                if(totalMysql == totalSql) {
                     _logger.LogWarning($"MigrarCustomersGroupCommandHandler - No se encontraton cambios en tablas");
                     return true;
                 }

@@ -46,7 +46,6 @@ public class TablaHistorialJob : IJob {
         while(fechaActual <= fechaFinal) {
             fechas.Add(new DWHistorialMigracionWSLOViewModel {
                 fechaoperacion = fechaActual,
-                bonuses = 0,
                 bonusstatuslog = 0,
                 customers = 0,
                 realgameevents = 0,

@@ -29,7 +29,7 @@ public class MigrarStoreCommand : IRequest<bool>{
             try {
                 var totalMysql = await _storeRepository.GetCountAll();
                 var totalSql = await _dwStoreRepository.GetCountAll();
-                if(totalMysql != totalSql) {
+                if(totalMysql == totalSql) {
                     _logger.LogWarning($"MigrarStoreCommandHandler - No se encontraton cambios en tablas");
                     return true;
                 }

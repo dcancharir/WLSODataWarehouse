@@ -29,7 +29,7 @@ public class MigrarGroupsxCommand : IRequest<bool>{
             try {
                 var totalMysql = await _groupsxRepository.GetCountAll();
                 var totalSql = await _dwGroupsxRepository.GetCountAll();
-                if(totalMysql != totalSql) {
+                if(totalMysql == totalSql) {
                     _logger.LogWarning($"MigrarGroupsxCommandHandler - No se encontraton cambios en tablas");
                     return true;
                 }

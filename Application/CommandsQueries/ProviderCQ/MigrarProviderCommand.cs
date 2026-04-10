@@ -29,7 +29,7 @@ public class MigrarProviderCommand : IRequest<bool>{
             try {
                 var totalMysql = await _providerRepository.GetCountAll();
                 var totalSql = await _dwProviderRepository.GetCountAll();
-                if(totalMysql != totalSql) {
+                if(totalMysql == totalSql) {
                     _logger.LogWarning($"MigrarProviderCommandHandler - No se encontraton cambios en tablas");
                     return true;
                 }

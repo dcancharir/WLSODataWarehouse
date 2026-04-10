@@ -20,13 +20,6 @@ public class UpdateMigracionDWCommand : IRequest<bool> {
 
         public async Task<bool> Handle(UpdateMigracionDWCommand request, CancellationToken cancellationToken) {
             bool result = false;
-            if(request.campo == "bonuses") {
-                var model = await _repository.FirstOrDefault(x => x.bonuses == 0 && x.fechaoperacion == request.fecha.Date);
-                if(model != null) {
-                    await _repository.UpdateAndSave(model);
-                    result = true;   
-                }
-            }
             if(request.campo == "bonusstatuslog") {
                 var model = await _repository.FirstOrDefault(x => x.bonusstatuslog == 0 && x.fechaoperacion == request.fecha.Date);
                 if(model != null) {

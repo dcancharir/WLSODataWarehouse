@@ -41,8 +41,10 @@ public partial class DataWarehouseContext : DbContext{
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<DWHistorialMigracionWSLO>(entity => {
             entity.ToTable("DWHistorialMigracionWSLOs", tb => tb.HasComment("Historial de migracion de tablas con fechas conocidas"));
+            entity.HasKey(x => x.fechaoperacion);
+
+            entity.Property(x=> x.fechaoperacion).ValueGeneratedNever();
             entity.Property(e => e.fechaoperacion).HasColumnType("date");
-            entity.Property(x => x.bonuses).HasDefaultValue(0);
             entity.Property(x => x.bonusstatuslog).HasDefaultValue(0);
             entity.Property(x => x.customers).HasDefaultValue(0);
             entity.Property(x => x.realgameevents).HasDefaultValue(0);

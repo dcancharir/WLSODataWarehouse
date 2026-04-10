@@ -35,7 +35,6 @@ public class MigrarBonusesCommand2 : IRequest<bool> {
             var batchSize = LimitePorPaginacion;
             long lastTimestamp = 0;
             try {
-             
             } catch(Exception ex) {
                 response = false;
                 _logger.LogError($"MigrarBonusesCommandHandler - {ex.Message}");

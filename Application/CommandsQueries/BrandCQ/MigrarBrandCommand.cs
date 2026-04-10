@@ -29,7 +29,7 @@ public class MigrarBrandCommand :IRequest<bool>{
             try {
                 var totalMysql = await _brandRepository.GetCountAll();
                 var totalSql = await _dwBrandRepository.GetCountAll();
-                if(totalMysql != totalSql) {
+                if(totalMysql == totalSql) {
                     _logger.LogWarning($"MigrarBrandCommandHandler - No se encontraton cambios en tablas");
                     return true;
                 }

@@ -29,7 +29,7 @@ public class MigrarGameCommand : IRequest<bool>{
             try {
                 var totalMysql = await _gameRepository.GetCountAll();
                 var totalSql = await _dwGameRepository.GetCountAll();
-                if(totalMysql != totalSql) {
+                if(totalMysql == totalSql) {
                     _logger.LogWarning($"MigrarGameCommandHandler - No se encontraton cambios en tablas");
                     return true;
                 }

@@ -29,7 +29,7 @@ public class MigrarProcessorCommand : IRequest<bool>{
             try {
                 var totalMysql = await _processorRepository.GetCountAll();
                 var totalSql = await _dwProcessorRepository.GetCountAll();
-                if(totalMysql != totalSql) {
+                if(totalMysql == totalSql) {
                     _logger.LogWarning($"MigrarProcessorCommandHandler - No se encontraton cambios en tablas");
                     return true;
                 }

@@ -29,7 +29,7 @@ public class MigrarAssociateCommand : IRequest<bool> {
             try {
                 var totalMysql = await _associateRepository.GetCountAll();
                 var totalSql = await _dwAssociateRepository.GetCountAll();
-                if(totalMysql != totalSql) {
+                if(totalMysql == totalSql) {
                     _logger.LogWarning($"MigrarAssociateCommandHandler - No se encontraton cambios en tablas");
                     return true;
                 }

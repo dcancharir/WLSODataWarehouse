@@ -9,10 +9,16 @@ using Quartz;
 using wlsomigratesdbdatawarehouseapi.Jobs;
 var builder = WebApplication.CreateBuilder(args);
 
-var intervaloHorasMigracion = builder.Configuration.GetValue<int>("Variables:IntervalorHorasMigracion");
 var mySqlVersion = builder.Configuration.GetValue<string>("Variables:MySqlVersion")?? "8.0.32-mysql";
 
-var realizarMigracion = builder.Configuration.GetValue<bool>("Variables:RealizarMigracion");
+var intervaloHorasMigracion = builder.Configuration.GetValue<int>("Jobs:IntervalorHorasMigracion");
+var realizarMigracion = builder.Configuration.GetValue<bool>("Jobs:RealizarMigracion");
+
+var RealizarMigracionConstante = builder.Configuration.GetValue<bool>("Jobs:RealizarMigracionConstante");
+var IntervaloMinutosMigracionConstante = builder.Configuration.GetValue<int>("Jobs:IntervaloMinutosMigracionConstante");
+
+bool RealizarCreacionFechas = builder.Configuration.GetValue<bool>("Jobs:RealizarCreacionFechas");
+int IntervaloHorasCreacionFechas = builder.Configuration.GetValue<int>("Jobs:IntervaloHorasCreacionFechas");
 
 IConfiguration configuration = new ConfigurationBuilder()
               .AddJsonFile("appsettings.json")
@@ -72,6 +78,30 @@ builder.Services.AddQuartz(q => {
                     .RepeatForever().Build())
                 .StartNow()
         );
+    }
+    if(RealizarMigracionConstante) {
+        JobKey key = new JobKey("MigracionConstanteJob");
+        q.AddJob<MigracionConstanteJob>(jobConfig => jobConfig.WithIdentity(key));
+        q.AddTrigger(opts => opts
+                .ForJob(key)
+                .WithIdentity("MigracionConstanteJob-trigger")
+                .WithSimpleSchedule(x => x
+                    .WithIntervalInMinutes(IntervaloMinutosMigracionConstante)
+                    .RepeatForever().Build())
+                .StartNow()
+        );
+    }
+    if(RealizarCreacionFechas) {
+        JobKey key = new JobKey("CreateTablaHistorialJob");
+        q.AddJob<TablaHistorialJob>(jobConfig => jobConfig.WithIdentity(key));
+        q.AddTrigger(opts => opts
+                .ForJob(key)
+                .WithIdentity("CreateTablaHistorialJob-trigger")
+                .WithSimpleSchedule(x => x
+                    .WithIntervalInHours(IntervaloHorasCreacionFechas)
+                    .RepeatForever().Build())
+                .StartNow()
+                );
     }
 }).AddQuartzHostedService(options => {
     // when shutting down we want jobs to complete gracefully

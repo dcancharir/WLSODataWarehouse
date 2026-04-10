@@ -25,9 +25,6 @@ public class GetDiasFaltantesMigracionDWQuery : IRequest<IEnumerable<DWHistorial
             if(request == null) {
                 return null;
             }
-            if(request.campo == "bonuses") {
-                resultDb = await _repo.GetQuery(null, x => x.bonuses == 0);
-            }
             if(request.campo == "bonusstatuslog") {
                 resultDb = await _repo.GetQuery(null, x => x.bonusstatuslog == 0);
             }

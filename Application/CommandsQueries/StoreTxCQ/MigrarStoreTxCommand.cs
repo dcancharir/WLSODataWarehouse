@@ -34,7 +34,7 @@ public class MigrarStoreTxCommand : IRequest<bool>{
             try {
                 var totalMysql = await _storeTxRepository.GetCountAll();
                 var totalSql = await _dwStoreTxRepository.GetCountAll();
-                if(totalMysql != totalSql) {
+                if(totalMysql == totalSql) {
                     _logger.LogWarning($"MigrarStoreTxCommandHandler - No se encontraton cambios en tablas");
                     return true;
                 }

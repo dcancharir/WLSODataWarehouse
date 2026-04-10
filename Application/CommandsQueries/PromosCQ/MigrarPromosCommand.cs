@@ -23,7 +23,7 @@ public class MigrarPromosCommand : IRequest<bool>{
             try {
                 var totalMysql = await _promosRepository.GetCountAll();
                 var totalSql = await _dwPromosRepository.GetCountAll();
-                if(totalMysql != totalSql) {
+                if(totalMysql == totalSql) {
                     _logger.LogWarning($"MigrarProcessorCommandHandler - No se encontraton cambios en tablas");
                     return true;
                 }

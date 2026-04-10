@@ -30,7 +30,7 @@ public class MigrarPaymentMethodCommand : IRequest<bool>{
             try {
                 var totalMysql = await _paymentMethodRepository.GetCountAll();
                 var totalSql = await _dwPaymentMethodRepository.GetCountAll();
-                if(totalMysql != totalSql) {
+                if(totalMysql == totalSql) {
                     _logger.LogWarning($"MigrarPaymentMethodCommandHandler - No se encontraton cambios en tablas");
                     return true;
                 }

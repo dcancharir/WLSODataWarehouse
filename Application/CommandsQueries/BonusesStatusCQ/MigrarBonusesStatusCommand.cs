@@ -30,7 +30,7 @@ public class MigrarBonusesStatusCommand : IRequest<bool> {
             try {
                 var totalMysql = await _bonusesStatusRepository.GetCountAll();
                 var totalSql = await _dwBonusesStatusRepository.GetCountAll();
-                if(totalMysql != totalSql) {
+                if(totalMysql == totalSql) {
                     _logger.LogWarning($"MigrarBonusesStatusCommandHandler - No se encontraton cambios en tablas");
                     return true;
                 }

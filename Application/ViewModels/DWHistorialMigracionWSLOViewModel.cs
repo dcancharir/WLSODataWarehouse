@@ -8,7 +8,6 @@ namespace Application.ViewModels;
 
 public class DWHistorialMigracionWSLOViewModel {
     public DateTime fechaoperacion { get; set; }
-    public int bonuses { get; set; }
     public int bonusstatuslog { get; set; }
     public int customers { get; set; }
     public int realgameevents { get; set; }
