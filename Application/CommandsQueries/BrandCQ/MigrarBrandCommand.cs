@@ -27,6 +27,13 @@ public class MigrarBrandCommand :IRequest<bool>{
         public async Task<bool> Handle(MigrarBrandCommand request,CancellationToken cancellationToken) {
             bool response = false;
             try {
+                var totalMysql = await _brandRepository.GetCountAll();
+                var totalSql = await _dwBrandRepository.GetCountAll();
+                if(totalMysql != totalSql) {
+                    _logger.LogWarning($"MigrarBrandCommandHandler - No se encontraton cambios en tablas");
+                    return true;
+                }
+
                 var registros = await _brandRepository.GetAll();
                 if(!registros.Any()) {
                     _logger.LogWarning($"MigrarBrandCommandHandler - No se encontraron registros a migrar");

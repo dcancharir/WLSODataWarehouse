@@ -28,6 +28,13 @@ public class MigrarCustomersGroupCommand :IRequest<bool>{
         public async Task<bool> Handle(MigrarCustomersGroupCommand request,CancellationToken cancellationToken) {
             bool response = false; 
             try {
+                var totalMysql = await _customersGroupRepository.GetCountAll();
+                var totalSql = await _dwCustomersGroupRepository.GetCountAll();
+                if(totalMysql != totalSql) {
+                    _logger.LogWarning($"MigrarCustomersGroupCommandHandler - No se encontraton cambios en tablas");
+                    return true;
+                }
+
                 var registros = await _customersGroupRepository.GetAll();
                 if(!registros.Any()) {
                     _logger.LogWarning($"MigrarCustomersGroupCommandHandler - No se encontraron registros a migrar");

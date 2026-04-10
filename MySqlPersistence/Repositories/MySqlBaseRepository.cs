@@ -19,6 +19,10 @@ public class MySqlBaseRepository<T> : IMySqlBaseRepository<T> where T : class {
         return await _context.Set<T>().ToListAsync();
     }
 
+    public async Task<long> GetCountAll() {
+        return await _context.Set<T>().CountAsync();
+    }
+
     public async Task<IEnumerable<T>> GetListByFilter(Expression<Func<T, bool>> filter) {
         var result = filter == null? await _context.Set<T>().ToListAsync() : await _context.Set<T>().Where(filter).ToListAsync();
         return result;

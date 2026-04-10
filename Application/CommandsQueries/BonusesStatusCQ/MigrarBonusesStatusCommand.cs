@@ -28,6 +28,12 @@ public class MigrarBonusesStatusCommand : IRequest<bool> {
         public async Task<bool>Handle(MigrarBonusesStatusCommand request,CancellationToken cancellationToken) {
             var response = false;
             try {
+                var totalMysql = await _bonusesStatusRepository.GetCountAll();
+                var totalSql = await _dwBonusesStatusRepository.GetCountAll();
+                if(totalMysql != totalSql) {
+                    _logger.LogWarning($"MigrarBonusesStatusCommandHandler - No se encontraton cambios en tablas");
+                    return true;
+                }
                 var registros = await _bonusesStatusRepository.GetAll();
                 if(!registros.Any()) {
                     _logger.LogWarning($"MigrarBonusesStatusCommandHandler - No se encontraron registros a migrar");

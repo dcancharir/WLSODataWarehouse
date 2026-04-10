@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Application.ViewModels;
+using AutoMapper;
 using DWDomain;
 using MySqlDomain;
 using System;
@@ -30,5 +31,6 @@ public class MapperProfiles : Profile{
         CreateMap<User, DWUser>().ReverseMap();
         CreateMap<Promos, DWPromos>().ReverseMap();
         CreateMap<StoreTxsStatus,DWStoreTxsStatus>().ReverseMap();
+        CreateMap<DWHistorialMigracionWSLO,DWHistorialMigracionWSLOViewModel>().ReverseMap();
     }
 }

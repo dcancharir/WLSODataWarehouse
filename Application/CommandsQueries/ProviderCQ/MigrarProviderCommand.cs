@@ -27,6 +27,13 @@ public class MigrarProviderCommand : IRequest<bool>{
         public async Task<bool> Handle(MigrarProviderCommand request,CancellationToken cancellationToken) {
             bool response = false;
             try {
+                var totalMysql = await _providerRepository.GetCountAll();
+                var totalSql = await _dwProviderRepository.GetCountAll();
+                if(totalMysql != totalSql) {
+                    _logger.LogWarning($"MigrarProviderCommandHandler - No se encontraton cambios en tablas");
+                    return true;
+                }
+
                 var remoto = await _providerRepository.GetAll();
                 var registros = _mapper.Map<List<DWProvider>>(remoto);
                 var idsProvider = registros.Select(x => x.ProviderId);

@@ -37,7 +37,16 @@ public partial class DataWarehouseContext : DbContext{
     public virtual DbSet<DWBonusesStatus> DWBonusesStatuses { get; set; }
     public virtual DbSet<DWStoreTxsStatus> DWStoreTxsStatuses { get; set; }
     public virtual DbSet<DWPromos> DWPromos { get; set; }
+    public virtual DbSet<DWHistorialMigracionWSLO> DWHistorialMigracionWSLOs { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        modelBuilder.Entity<DWHistorialMigracionWSLO>(entity => {
+            entity.ToTable("DWHistorialMigracionWSLOs", tb => tb.HasComment("Historial de migracion de tablas con fechas conocidas"));
+            entity.Property(e => e.fechaoperacion).HasColumnType("date");
+            entity.Property(x => x.bonuses).HasDefaultValue(0);
+            entity.Property(x => x.bonusstatuslog).HasDefaultValue(0);
+            entity.Property(x => x.customers).HasDefaultValue(0);
+            entity.Property(x => x.realgameevents).HasDefaultValue(0);
+        });
         modelBuilder.Entity<DWAssociate>(entity =>
         {
             entity.HasKey(e => e.Ruc).HasName("PK_Associate");

@@ -27,6 +27,12 @@ public class MigrarAssociateCommand : IRequest<bool> {
         public async Task<bool> Handle(MigrarAssociateCommand request,CancellationToken cancellationToken) {
             var response = false;
             try {
+                var totalMysql = await _associateRepository.GetCountAll();
+                var totalSql = await _dwAssociateRepository.GetCountAll();
+                if(totalMysql != totalSql) {
+                    _logger.LogWarning($"MigrarAssociateCommandHandler - No se encontraton cambios en tablas");
+                    return true;
+                }
                 var registros = await _associateRepository.GetAll();
               
                 if(!registros.Any()) {

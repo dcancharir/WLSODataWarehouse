@@ -23,17 +23,25 @@ public class MigrarBonusStatusLogCommand :IRequest<bool>{
             _mapper = mapper;
             _logger = logger;
         }
-        public async Task<bool>Handle(MigrarBonusStatusLogCommand request,CancellationToken cancellationToken) {
+        public async Task<bool> Handle(MigrarBonusStatusLogCommand request, CancellationToken cancellationToken) {
             bool response = false;
             try {
+
+                var totalMysql = await _bonusStatusLogRepository.GetCountAll();
+                var totalSql = await _dwBonusStatusLogRepository.GetCountAll();
+                if(totalMysql != totalSql) {
+                    _logger.LogWarning($"MigrarBonusStatusLogCommandHandler - No se encontraton cambios en tablas");
+                    return true;
+                }
+
                 var remoto = await _bonusStatusLogRepository.GetAll();
                 var registros = _mapper.Map<List<DWBonusStatusLog>>(remoto);
 
                 var ids = registros.Select(x => x.LogId);
                 var registrosExistentes = await _dwBonusStatusLogRepository.GetAll();
 
-                var idsExistentes = registrosExistentes.Where(x=>ids.Contains(x.LogId)).Select(x=>x.LogId).ToList();
-                if(idsExistentes.Any() ) {
+                var idsExistentes = registrosExistentes.Where(x => ids.Contains(x.LogId)).Select(x => x.LogId).ToList();
+                if(idsExistentes.Any()) {
                     registros.RemoveAll(x => idsExistentes.Contains(x.LogId));
                 }
 

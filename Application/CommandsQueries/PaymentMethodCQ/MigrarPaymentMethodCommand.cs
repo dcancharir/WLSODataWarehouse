@@ -28,6 +28,13 @@ public class MigrarPaymentMethodCommand : IRequest<bool>{
         public async Task<bool> Handle(MigrarPaymentMethodCommand request,CancellationToken cancellationToken) {
             bool response = false;
             try {
+                var totalMysql = await _paymentMethodRepository.GetCountAll();
+                var totalSql = await _dwPaymentMethodRepository.GetCountAll();
+                if(totalMysql != totalSql) {
+                    _logger.LogWarning($"MigrarPaymentMethodCommandHandler - No se encontraton cambios en tablas");
+                    return true;
+                }
+
                 var remoto = await _paymentMethodRepository.GetAll();
                 var registros = _mapper.Map<List<DWPaymentMethod>>(remoto);
                 var registrosExistentes = await _dwPaymentMethodRepository.GetAll();

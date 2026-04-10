@@ -27,6 +27,13 @@ public class MigrarGameCommand : IRequest<bool>{
         public async Task<bool> Handle(MigrarGameCommand request, CancellationToken cancellationToken) {
             bool response = false;
             try {
+                var totalMysql = await _gameRepository.GetCountAll();
+                var totalSql = await _dwGameRepository.GetCountAll();
+                if(totalMysql != totalSql) {
+                    _logger.LogWarning($"MigrarGameCommandHandler - No se encontraton cambios en tablas");
+                    return true;
+                }
+
                 var registros = await _gameRepository.GetAll();
                 if (!registros.Any()) {
                     _logger.LogWarning($"MigrarGameCommandHandler - No se encontraron registros a migrar");

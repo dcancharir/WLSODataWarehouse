@@ -85,4 +85,8 @@ public class DWBaseRepository<T> : IDWBaseRepository<T> where T : class {
         //var result = filter == null ? await _context.Set<T>().ToListAsync() : await _context.Set<T>().Where(filter).ToListAsync();
         //return result;
     }
+
+    public async Task<long> GetCountAll() {
+        return await _context.Set<T>().LongCountAsync();
+    }
 }

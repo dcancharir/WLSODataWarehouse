@@ -27,6 +27,13 @@ public class MigrarGroupsxCommand : IRequest<bool>{
         public async Task<bool> Handle(MigrarGroupsxCommand request,CancellationToken cancellationToken) {
             bool response = false;
             try {
+                var totalMysql = await _groupsxRepository.GetCountAll();
+                var totalSql = await _dwGroupsxRepository.GetCountAll();
+                if(totalMysql != totalSql) {
+                    _logger.LogWarning($"MigrarGroupsxCommandHandler - No se encontraton cambios en tablas");
+                    return true;
+                }
+
                 var remoto = await _groupsxRepository.GetAll();
                 var registros = _mapper.Map<List<DWGroupsx>>(remoto);
                 var groupsIds = registros.Select(x => x.GroupId);

@@ -27,6 +27,13 @@ public class MigrarProcessorCommand : IRequest<bool>{
         public async Task<bool> Handle(MigrarProcessorCommand request,CancellationToken cancellationToken) {
             bool response = false;
             try {
+                var totalMysql = await _processorRepository.GetCountAll();
+                var totalSql = await _dwProcessorRepository.GetCountAll();
+                if(totalMysql != totalSql) {
+                    _logger.LogWarning($"MigrarProcessorCommandHandler - No se encontraton cambios en tablas");
+                    return true;
+                }
+
                 var remoto = await _processorRepository.GetAll();
                 var registros = _mapper.Map<List<DWProcessor>>(remoto);
 

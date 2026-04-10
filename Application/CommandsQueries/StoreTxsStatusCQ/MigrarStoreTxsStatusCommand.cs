@@ -26,6 +26,13 @@ public class MigrarStoreTxsStatusCommand : IRequest<bool>{
         public async Task<bool>Handle(MigrarStoreTxsStatusCommand request,CancellationToken cancellationToken) {
             bool response = false;
             try {
+                var totalMysql = await _storeTxsStatusRepository.GetCountAll();
+                var totalSql = await _dwStoreTxsStatusRepository.GetCountAll();
+                if(totalMysql != totalSql) {
+                    _logger.LogWarning($"MigrarStoreTxsStatusCommandHandler - No se encontraton cambios en tablas");
+                    return true;
+                }
+
                 var registros = await _storeTxsStatusRepository.GetAll();
                 if(!registros.Any()) {
                     _logger.LogWarning($"MigrarStoreTxsStatusCommandHandler - No se encontraron registros a migrar");

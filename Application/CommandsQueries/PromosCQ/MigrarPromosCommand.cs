@@ -21,6 +21,13 @@ public class MigrarPromosCommand : IRequest<bool>{
         public async Task<bool> Handle(MigrarPromosCommand request,CancellationToken cancellationToken) {
             bool response = false;
             try {
+                var totalMysql = await _promosRepository.GetCountAll();
+                var totalSql = await _dwPromosRepository.GetCountAll();
+                if(totalMysql != totalSql) {
+                    _logger.LogWarning($"MigrarProcessorCommandHandler - No se encontraton cambios en tablas");
+                    return true;
+                }
+
                 var registros= await _promosRepository.GetAll();
                 if(!registros.Any()) {
                     _logger.LogWarning($"MigrarPromosCommandHandler - No se encontraron registros a migrar");

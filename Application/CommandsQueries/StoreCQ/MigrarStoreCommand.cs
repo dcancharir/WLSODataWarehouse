@@ -27,6 +27,13 @@ public class MigrarStoreCommand : IRequest<bool>{
         public async Task<bool> Handle(MigrarStoreCommand request, CancellationToken cancellationToken) {
             bool response = false;
             try {
+                var totalMysql = await _storeRepository.GetCountAll();
+                var totalSql = await _dwStoreRepository.GetCountAll();
+                if(totalMysql != totalSql) {
+                    _logger.LogWarning($"MigrarStoreCommandHandler - No se encontraton cambios en tablas");
+                    return true;
+                }
+
                 var remoto = await _storeRepository.GetAll();
                 var registros = _mapper.Map<List<DWStore>>(remoto);
 
