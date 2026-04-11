@@ -13,4 +13,5 @@ public interface ICustomerRepository : IMySqlBaseRepository<Customer> {
     public Task<IEnumerable<Customer>> GetPaginatedByDate(int page, int pageSize,DateTime fecha);
     //public Task<IEnumerable<Customer>> GetAll(int page, int pageSize);
     public Task<IEnumerable<Customer>> GetByDate(DateTime fecha,int limit);
+    public Task<IEnumerable<Customer>> GetByFechaOperacion(DateTime fechaOperacion);
 }

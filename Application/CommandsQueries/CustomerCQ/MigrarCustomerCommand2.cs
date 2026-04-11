@@ -40,13 +40,15 @@ public class MigrarCustomerCommand2 : IRequest<bool> {
                 }
                 var fechaOperacionDate = DateOnly.FromDateTime(fechaOperacion);
 
-                var itemsEliminar = await _dwCustomerRepository.GetQuery(null, x => x.RegDate.Value.Date == fechaOperacion.Date);
+                //var itemsEliminar = await _dwCustomerRepository.GetQuery(null, x => x.RegDate.Value.Date == fechaOperacion.Date);
+                var itemsEliminar = await _dwCustomerRepository.GetByFechaOperacion(fechaOperacion);
                 if (itemsEliminar != null)
                 {
                     await _dwCustomerRepository.RemoveRange(itemsEliminar.ToList());
                 }
 
-                var itemsMysql = await _customerRepository.GetQuery(null, x => x.RegDate.Value.Date == fechaOperacion.Date);
+                //var itemsMysql = await _customerRepository.GetQuery(null, x => x.RegDate.Value.Date == fechaOperacion.Date);
+                var itemsMysql = await _customerRepository.GetByFechaOperacion(fechaOperacion);
                 if (itemsMysql !=null)
                 {
                     var registrosMapeados = _mapper.Map<List<DWCustomer>>(itemsMysql);

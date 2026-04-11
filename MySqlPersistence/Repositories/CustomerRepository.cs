@@ -108,4 +108,41 @@ FROM `Customers` where `regDatetime` >= {fecha} order by `regDatetime` asc LIMIT
     public async Task<int> GetTotalRecordsByDate(DateTime fecha) {
         return await _context.Customers.Where(x => x.RegDatetime >= fecha).CountAsync();
     }
+    public async Task<IEnumerable<Customer>> GetByFechaOperacion(DateTime fechaOperacion) {
+        FormattableString query = $@"
+            SELECT  
+        `associateId`,  
+        `storeId`,  
+        `playerId`,  
+        `username`,  
+        `email`,  
+        `firstName`,  
+        `lastName`,  
+        `phone`,  
+        `active`,  
+        `verified`,  
+        `excluded`,  
+        `regDatetime`,  
+        `birthdate`,  
+        `addressDept`,  
+        `addressProv`,  
+        `addressDist`, 
+        `address`,  
+        CAST(`identId` as CHAR(250)) as identId,  
+ `identification` ,CAST(`ip` as CHAR(39)) as ip,`lastLoginTimestamp`,
+  CAST(`countryId` as CHAR(50)) as countryId,
+`regDate`,
+`icCode`,
+`phoneChecked`,
+`emailChecked`,
+`city`,
+`lastLoginDatetime`,
+`updDatetime`,
+`regTimestamp`,
+`gender`
+        FROM `Customers` where `regDate` = {fechaOperacion} ;
+        ";
+        var result = await _context.Customers.FromSql(query).AsNoTracking().ToListAsync();
+        return result;
+    }
 }
