@@ -47,8 +47,8 @@ public class MigrarRealGameEventCommand2 : IRequest<bool> {
                 if(itemsEliminar != null) {
                     await _dwRealGameEventRepository.RemoveRange(itemsEliminar.ToList());
                 }
-
-                var itemsMysql = await _realGameEventRepository.GetQuery(null, x => x.InsDatetime.Value.Date == fechaOperacion.Date);
+                var itemsMysql = await _realGameEventRepository.GetByFechaOperacion(fechaOperacion);
+                //var itemsMysql = await _realGameEventRepository.GetQuery(null, x => x.InsDatetime.Value.Date == fechaOperacion.Date);
                 if(itemsMysql != null) {
                     var registrosMapeados = _mapper.Map<List<DWRealGameEvent>>(itemsMysql);
                     await _dwRealGameEventRepository.BulkInsert(registrosMapeados);
