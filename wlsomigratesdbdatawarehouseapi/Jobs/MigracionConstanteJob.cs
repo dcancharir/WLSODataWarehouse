@@ -35,13 +35,13 @@ public class MigracionConstanteJob : IJob {
                     await _mediator.Send(new MigrarCustomerCommand2 { fechaOperacion = dia.fechaoperacion });
                 }
             }
-            _logger.LogInformation("RealGameEvents Iniciado");
-            var diasRealGameEvent = await _mediator.Send(new GetDiasFaltantesMigracionDWQuery { campo = "realgameevents" });
-            if(diasRealGameEvent != null) {
-                foreach(var dia in diasRealGameEvent) {
-                    await _mediator.Send(new MigrarRealGameEventCommand2 { fechaOperacion = dia.fechaoperacion });
-                }
-            }
+            //_logger.LogInformation("RealGameEvents Iniciado");
+            //var diasRealGameEvent = await _mediator.Send(new GetDiasFaltantesMigracionDWQuery { campo = "realgameevents" });
+            //if(diasRealGameEvent != null) {
+            //    foreach(var dia in diasRealGameEvent) {
+            //        await _mediator.Send(new MigrarRealGameEventCommand2 { fechaOperacion = dia.fechaoperacion });
+            //    }
+            //}
             _logger.LogInformation("Job MigracionConstanteJob Finalizado");
         }
     }

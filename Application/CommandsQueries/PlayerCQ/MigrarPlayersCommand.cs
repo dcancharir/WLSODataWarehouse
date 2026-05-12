@@ -52,7 +52,7 @@ public class MigrarPlayersCommand : IRequest<bool>{
                         var idsExists = exists.Select(x => x.PlayerId).ToList();
                         mapped.RemoveAll(x=>idsExists.Contains(x.PlayerId));
                     }
-                    if(mapped.Any()) {
+                    if(mapped.Count != 0) {
                         await _dwPlayerRepository.BulkInsert(mapped);
                         await _dwPlayerRepository.BulkSaveChanges();
                     }

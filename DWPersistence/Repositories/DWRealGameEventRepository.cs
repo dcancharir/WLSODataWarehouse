@@ -15,6 +15,10 @@ public class DWRealGameEventRepository : DWBaseRepository<DWRealGameEvent>, IDWR
         _context = context;
     }
 
+    public async Task<DWRealGameEvent?> GetLastRecord() {
+        return await _context.DWRealGameEvents.OrderByDescending(x=>x.EventId).FirstOrDefaultAsync();
+    }
+
     public async Task<DWRealGameEvent?> GetLastRecordByDate() {
         return await _context.DWRealGameEvents.OrderByDescending(x=>x.InsDatetime).FirstOrDefaultAsync();
     }

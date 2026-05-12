@@ -20,6 +20,9 @@ var IntervaloMinutosMigracionConstante = builder.Configuration.GetValue<int>("Jo
 bool RealizarCreacionFechas = builder.Configuration.GetValue<bool>("Jobs:RealizarCreacionFechas");
 int IntervaloHorasCreacionFechas = builder.Configuration.GetValue<int>("Jobs:IntervaloHorasCreacionFechas");
 
+bool RealizarMigracionRealGameEvents = builder.Configuration.GetValue<bool>("Jobs:RealizarMigracionRealGameEvents");
+string HoraMigracionRealGameEvents = builder.Configuration.GetValue<string>("Jobs:HoraMigracionRealGameEvents") ??"08:00";
+
 IConfiguration configuration = new ConfigurationBuilder()
               .AddJsonFile("appsettings.json")
               .Build();
@@ -100,6 +103,20 @@ builder.Services.AddQuartz(q => {
                 .WithSimpleSchedule(x => x
                     .WithIntervalInHours(IntervaloHorasCreacionFechas)
                     .RepeatForever().Build())
+                .StartNow()
+                );
+    }
+    if(RealizarMigracionRealGameEvents) {
+        JobKey key = new JobKey("MigrarRealGameEventsJob");
+        var hora = Convert.ToDateTime(HoraMigracionRealGameEvents);
+        q.AddJob<MigrarRealGameEventsJob>(jobConfig => jobConfig.WithIdentity(key));
+        q.AddTrigger(opts => opts
+                .ForJob(key)
+                .WithIdentity("MigrarRealGameEventsJob-trigger")
+                .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(hora.Hour, hora.Minute))
+                //.WithSimpleSchedule(x => x
+                //    .WithIntervalInHours(IntervaloMinutosMigrarRealGameEvents)
+                //    .RepeatForever().Build())
                 .StartNow()
                 );
     }
