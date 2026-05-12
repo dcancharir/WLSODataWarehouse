@@ -31,38 +31,41 @@ public class MigrarRealGameEventCommand3 : IRequest<bool> {
         public async Task<bool> Handle(MigrarRealGameEventCommand3 request, CancellationToken ct) {
             bool response = false;
             var batchSize = LimitePorPaginacion;
-            ulong lastId = 0;
+            ulong currentId = 0;
             try {
-                var fechaActual = DateTime.Now;
                 var lastRecord = await _dwRealGameEventRepository.GetLastRecord();
                 if(lastRecord != null) {
-                    lastId = lastRecord.EventId;
+                    currentId = lastRecord.EventId;
                 }
-                var totalRecords = await _realGameEventRepository.GetTotalRecordsById(lastId);
-                var batchCount = (totalRecords + batchSize - 1) / batchSize;
-                for(int i = 0; i < batchCount; i++) {
-                    var startIndex = i * batchSize;
-                    var batch = await _realGameEventRepository.GetPaginatedById(startIndex,batchSize,lastId);
+                var hoy = DateTime.Today;
+                int iteration = 0;
+                while(true) {
+                    var batch = (await _realGameEventRepository.GetPaginatedByIdCursor(currentId, batchSize)).ToList();
+                    if(!batch.Any()) break;
 
-                    ////No puede insertarse registros de hoy, si estamos 08/mayo/2026, solo pueden insertarse registros de hasta el 07 mayo
-                    //if(batch.Any(x => x.InsDatetime.Value.Date == fechaActual.Date)) {
-                    //    _logger.LogError($"Fecha Actual : {fechaActual.Date}; existe un registro con esta fecha");
-                    //    break;
-                    //}
+                    bool hayRegistrosDeHoy = batch.Any(x => x.InsDatetime.HasValue && x.InsDatetime.Value.Date >= hoy);
+                    var paraInsertar = batch.Where(x => x.InsDatetime.HasValue && x.InsDatetime.Value.Date < hoy).ToList();
 
-                    var mapped = _mapper.Map<List<DWRealGameEvent>>(batch);
-                    var eventsId = mapped.Select(x => x.EventId);
-                    var exists = await _dwRealGameEventRepository.GetListByFilter(x=>eventsId.Contains(x.EventId));
+                    if(paraInsertar.Any()) {
+                        var mapped = _mapper.Map<List<DWRealGameEvent>>(paraInsertar);
+                        var eventsId = mapped.Select(x => x.EventId);
+                        var exists = await _dwRealGameEventRepository.GetListByFilter(x => eventsId.Contains(x.EventId));
 
-                    if(exists.Any()) {
-                        var idsExists = exists.Select(x => x.EventId).ToList();
-                        mapped.RemoveAll(x=>idsExists.Contains(x.EventId));
+                        if(exists.Any()) {
+                            var idsExists = exists.Select(x => x.EventId).ToList();
+                            mapped.RemoveAll(x => idsExists.Contains(x.EventId));
+                        }
+                        if(mapped.Any()) {
+                            await _dwRealGameEventRepository.BulkInsert(mapped);
+                            await _dwRealGameEventRepository.BulkSaveChanges();
+                        }
                     }
-                    if(mapped.Any()) { 
-                        await _dwRealGameEventRepository.BulkInsert(mapped);
-                        await _dwRealGameEventRepository.BulkSaveChanges();
-                    }
-                    _logger.LogInformation($"Limite paginacion : {batchSize} - Nro. Iteracion : {i} - StartIndex : {startIndex} - LastId : {lastId}");
+
+                    currentId = batch.Max(x => x.EventId);
+                    _logger.LogInformation($"Limite paginacion : {batchSize} - Nro. Iteracion : {iteration} - LastId procesado : {currentId}");
+                    iteration++;
+
+                    if(hayRegistrosDeHoy) break;
                 }
                 response = true;
             } catch(Exception ex) {
