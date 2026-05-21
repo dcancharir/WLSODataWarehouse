@@ -98,11 +98,11 @@ public class RealGameEventRepository : MySqlBaseRepository<RealGameEvent>, IReal
         return await _context.RealGameEvents.Where(x=>x.InsDatetime >= insDateTime).CountAsync();
     }
 
-    public async Task<IEnumerable<RealGameEvent>> GetPaginatedById(int page, int pageSize, ulong id) {
-        return await _context.RealGameEvents.Where(x=>x.EventId >= id).OrderBy(x=>x.EventId).Skip(page).Take(pageSize).ToListAsync();
-    }
-
-    public async Task<int> GetTotalRecordsById(ulong id) {
-        return await _context.RealGameEvents.Where(x => x.EventId >= id).CountAsync();
+    public async Task<IEnumerable<RealGameEvent>> GetPaginatedByIdCursor(ulong lastId, int pageSize) {
+        return await _context.RealGameEvents
+            .Where(x => x.EventId > lastId)
+            .OrderBy(x => x.EventId)
+            .Take(pageSize)
+            .ToListAsync();
     }
 }
