@@ -48,7 +48,7 @@ public class MigrarGameCommand : IRequest<bool>{
                 var listaProviderIds = existentes.Select(x => x.ProviderId);
 
                 var registrosMapear = registros.Where(x => !listaGamesId.Contains(x.GameId) && !listaProviderIds.Contains(x.ProviderId));
-
+                _logger.LogInformation($"MigrarGameCommandHandler - Total Registros - {registrosMapear.Count()}");
                 var registrosMapeados = _mapper.Map<List<DWGame>>(registrosMapear);
 
                 if(registrosMapeados.Any()) { 

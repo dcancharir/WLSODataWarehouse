@@ -49,6 +49,7 @@ public class MigrarCustomerCommand2 : IRequest<bool> {
 
                 //var itemsMysql = await _customerRepository.GetQuery(null, x => x.RegDate.Value.Date == fechaOperacion.Date);
                 var itemsMysql = await _customerRepository.GetByFechaOperacion(fechaOperacion);
+                _logger.LogInformation($"MigrarCustomerCommand2Handler - Total Registros para :  {fechaOperacion} - {itemsMysql.Count()}");
                 if (itemsMysql !=null)
                 {
                     var registrosMapeados = _mapper.Map<List<DWCustomer>>(itemsMysql);

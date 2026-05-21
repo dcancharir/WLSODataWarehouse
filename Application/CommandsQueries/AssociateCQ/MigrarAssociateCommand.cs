@@ -49,6 +49,7 @@ public class MigrarAssociateCommand : IRequest<bool> {
                 var registrosMapeados = _mapper.Map<List<DWAssociate>>(registrosMapear);
 
                 //var registros = registrosMapeados.RemoveAll(x => existentes.Select(y => y.Ruc).Contains(x.Ruc));
+                _logger.LogInformation($"MigrarAssociateCommandHandler - Total Registros - {registros.Count()}");
                 if(registrosMapeados.Any() ) {
                     await _dwAssociateRepository.BulkInsert(registrosMapeados);
                     await _dwAssociateRepository.BulkSaveChanges();

@@ -45,7 +45,7 @@ public class MigrarCustomersGroupCommand :IRequest<bool>{
                 var listaGroupId = existentes.Select(x => x.GroupId);
 
                 var registrosMapear = registros.Where(x => !listaPlayerId.Contains(x.PlayerId) && !listaGroupId.Contains(x.GroupId));
-
+                _logger.LogInformation($"MigrarCustomersGroupCommandHandler - Total Registros - {registrosMapear.Count()}");
                 var registrosMapeados = _mapper.Map<List<DWCustomersGroup>>(registrosMapear);
 
                 if(registrosMapeados.Any()) {

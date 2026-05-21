@@ -20,7 +20,7 @@ public class MySqlBaseRepository<T> : IMySqlBaseRepository<T> where T : class {
     }
 
     public async Task<long> GetCountAll() {
-        return await _context.Set<T>().CountAsync();
+        return await _context.Set<T>().LongCountAsync();
     }
 
     public async Task<IEnumerable<T>> GetListByFilter(Expression<Func<T, bool>> filter) {

@@ -43,6 +43,7 @@ public class MigrarBonusStatusLogCommand2 : IRequest<bool> {
                     await _dwBonusStatusLogRepository.RemoveRange(itemsEliminar.ToList());
                 }
                 var itemsMysql = await _bonusStatusLogRepository.GetQuery(null, x => x.SetDate == fechaOperacionDate);
+                _logger.LogInformation($"MigrarBonusStatusLogCommand2Handler - Total Registros para :  {fechaOperacion} - {itemsMysql.Count()}");
                 if(itemsMysql != null) {
                     var registrosMapeados = _mapper.Map<List<DWBonusStatusLog>>(itemsMysql);
                     await _dwBonusStatusLogRepository.BulkInsert(registrosMapeados);

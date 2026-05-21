@@ -34,7 +34,7 @@ public class MigrarBonusesCommand : IRequest<bool>{
                 }
                 var totalRecords = await _bonusesRepository.GetTotalRecordsByTimestamp(lastTimestamp);
                 var batchCount = (totalRecords + batchSize - 1)/batchSize;
-
+                _logger.LogInformation($"MigrarBonusesCommandHandler - Total Registros - {totalRecords}");
                 for(int i = 0; i<= batchCount; i++) {
                     var startIndex = i*batchSize;
                     var batch = await _bonusesRepository.GetPaginatedByTimestamp(startIndex, batchSize, lastTimestamp);
