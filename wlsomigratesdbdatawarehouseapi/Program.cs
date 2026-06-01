@@ -11,14 +11,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 var mySqlVersion = builder.Configuration.GetValue<string>("Variables:MySqlVersion")?? "8.0.32-mysql";
 
-var intervaloHorasMigracion = builder.Configuration.GetValue<int>("Jobs:IntervalorHorasMigracion");
+string HoraMigracion = builder.Configuration.GetValue<string>("Jobs:HoraMigracion") ?? "08:00";
 var realizarMigracion = builder.Configuration.GetValue<bool>("Jobs:RealizarMigracion");
 
 var RealizarMigracionConstante = builder.Configuration.GetValue<bool>("Jobs:RealizarMigracionConstante");
-var IntervaloMinutosMigracionConstante = builder.Configuration.GetValue<int>("Jobs:IntervaloMinutosMigracionConstante");
+string HoraMigracionConstante = builder.Configuration.GetValue<string>("Jobs:HoraMigracionConstante") ?? "08:00";
 
 bool RealizarCreacionFechas = builder.Configuration.GetValue<bool>("Jobs:RealizarCreacionFechas");
-int IntervaloHorasCreacionFechas = builder.Configuration.GetValue<int>("Jobs:IntervaloHorasCreacionFechas");
+string HoraCreacionFechas = builder.Configuration.GetValue<string>("Jobs:HoraCreacionFechas") ?? "01:00";
 
 bool RealizarMigracionRealGameEvents = builder.Configuration.GetValue<bool>("Jobs:RealizarMigracionRealGameEvents");
 string HoraMigracionRealGameEvents = builder.Configuration.GetValue<string>("Jobs:HoraMigracionRealGameEvents") ??"08:00";
@@ -72,37 +72,43 @@ builder.Services.AddQuartz(q => {
     if(realizarMigracion) {
         JobKey key = new JobKey("MigracionDiariaJob");
         q.AddJob<MigracionWSLOJob>(jobConfig => jobConfig.WithIdentity(key));
+        var hora = Convert.ToDateTime(HoraMigracion);
         q.AddTrigger(opts => opts
                 .ForJob(key)
                 .WithIdentity("MigracionDiariaJob-trigger")
+                .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(hora.Hour, hora.Minute))
                 //.WithCronSchedule(CronMigracionDiaria)
-                .WithSimpleSchedule(x => x
-                    .WithIntervalInHours(intervaloHorasMigracion)
-                    .RepeatForever().Build())
+                //.WithSimpleSchedule(x => x
+                //    .WithIntervalInHours(intervaloHorasMigracion)
+                //    .RepeatForever().Build())
                 .StartNow()
         );
     }
     if(RealizarMigracionConstante) {
         JobKey key = new JobKey("MigracionConstanteJob");
+        var hora = Convert.ToDateTime(HoraMigracionConstante);
         q.AddJob<MigracionConstanteJob>(jobConfig => jobConfig.WithIdentity(key));
         q.AddTrigger(opts => opts
                 .ForJob(key)
                 .WithIdentity("MigracionConstanteJob-trigger")
-                .WithSimpleSchedule(x => x
-                    .WithIntervalInMinutes(IntervaloMinutosMigracionConstante)
-                    .RepeatForever().Build())
+                .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(hora.Hour, hora.Minute))
+                //.WithSimpleSchedule(x => x
+                //    .WithIntervalInMinutes(IntervaloMinutosMigracionConstante)
+                //    .RepeatForever().Build())
                 .StartNow()
         );
     }
     if(RealizarCreacionFechas) {
         JobKey key = new JobKey("CreateTablaHistorialJob");
+        var hora = Convert.ToDateTime(HoraCreacionFechas);
         q.AddJob<TablaHistorialJob>(jobConfig => jobConfig.WithIdentity(key));
         q.AddTrigger(opts => opts
                 .ForJob(key)
                 .WithIdentity("CreateTablaHistorialJob-trigger")
-                .WithSimpleSchedule(x => x
-                    .WithIntervalInHours(IntervaloHorasCreacionFechas)
-                    .RepeatForever().Build())
+                .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(hora.Hour, hora.Minute))
+                //.WithSimpleSchedule(x => x
+                //    .WithIntervalInHours(IntervaloHorasCreacionFechas)
+                //    .RepeatForever().Build())
                 .StartNow()
                 );
     }
