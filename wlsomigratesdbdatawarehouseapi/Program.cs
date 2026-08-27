@@ -7,6 +7,8 @@ using Application;
 using DWPersistence;
 using Quartz;
 using wlsomigratesdbdatawarehouseapi.Jobs;
+using gladconNewWebOnline.Workers.AppMonitor;
+using wlsomigratesdbdatawarehouseapi.AppMonitor;
 var builder = WebApplication.CreateBuilder(args);
 
 var mySqlVersion = builder.Configuration.GetValue<string>("Variables:MySqlVersion")?? "8.0.32-mysql";
@@ -33,6 +35,8 @@ builder.Services.AddDWPersistence();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHostedService<SignalRWorker>();
+builder.Services.Configure<AppMonitorSettings>(builder.Configuration.GetSection(AppMonitorSettings.SectionName));
 
 /**/
 builder.WebHost.ConfigureKestrel(serverOptions => {
